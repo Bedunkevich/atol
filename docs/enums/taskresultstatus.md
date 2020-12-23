@@ -22,7 +22,7 @@
 
 •  **blocked**:  = "blocked"
 
-*Defined in [types.ts:11](https://github.com/Bedunkevich/atol/blob/c79e0a4/src/types.ts#L11)*
+*Defined in [types.ts:11](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L11)*
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 •  **canceled**:  = "canceled"
 
-*Defined in [types.ts:12](https://github.com/Bedunkevich/atol/blob/c79e0a4/src/types.ts#L12)*
+*Defined in [types.ts:12](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L12)*
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 •  **error**:  = "error"
 
-*Defined in [types.ts:7](https://github.com/Bedunkevich/atol/blob/c79e0a4/src/types.ts#L7)*
+*Defined in [types.ts:7](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L7)*
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 •  **inProgress**:  = "inProgress"
 
-*Defined in [types.ts:9](https://github.com/Bedunkevich/atol/blob/c79e0a4/src/types.ts#L9)*
+*Defined in [types.ts:9](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L9)*
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 •  **interrupted**:  = "interrupted"
 
-*Defined in [types.ts:10](https://github.com/Bedunkevich/atol/blob/c79e0a4/src/types.ts#L10)*
+*Defined in [types.ts:10](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L10)*
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 •  **ready**:  = "ready"
 
-*Defined in [types.ts:6](https://github.com/Bedunkevich/atol/blob/c79e0a4/src/types.ts#L6)*
+*Defined in [types.ts:6](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L6)*
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 •  **wait**:  = "wait"
 
-*Defined in [types.ts:8](https://github.com/Bedunkevich/atol/blob/c79e0a4/src/types.ts#L8)*
+*Defined in [types.ts:8](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L8)*
