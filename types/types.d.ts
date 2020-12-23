@@ -1,3 +1,4 @@
+import type { AxiosPromise } from 'axios';
 export declare type AtolResponce = {
     uuid: string;
 };
@@ -9,6 +10,10 @@ export declare enum TaskResultStatus {
     interrupted = "interrupted",
     blocked = "blocked",
     canceled = "canceled"
+}
+export declare enum RequestTypes {
+    openShift = "openShift",
+    closeShift = "closeShift"
 }
 export declare type TaskResultResponce = {
     results: {
@@ -24,5 +29,10 @@ export declare type Session = {
         name: string;
         vatin: string;
     };
+};
+export declare type AtolDriverInterface = {
+    openShift: () => AxiosPromise<AtolResponce>;
+    closeShift: () => AxiosPromise<AtolResponce>;
+    checkStatus: (uuid: string, callIndex?: number) => Promise<TaskResultStatus>;
 };
 //# sourceMappingURL=types.d.ts.map

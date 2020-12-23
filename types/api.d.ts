@@ -1,8 +1,4 @@
-import { AxiosPromise } from 'axios';
-import { Session, AtolResponce, TaskResultStatus } from './types';
-declare const _default: (session: Session, baseURL?: string) => {
-    openShift: () => AxiosPromise<AtolResponce>;
-    checkStatus: (uuid: string) => Promise<TaskResultStatus>;
-};
+import { Session, AtolDriverInterface } from './types';
+declare const _default: (session: Session, baseURL?: string) => AtolDriverInterface;
 export default _default;
 //# sourceMappingURL=api.d.ts.map

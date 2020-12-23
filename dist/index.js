@@ -1,5 +1,5 @@
 /*!
- * atol v0.0.1
+ * @bedunkevich/atol v0.0.1
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -10,10 +10,12 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var axios = require('axios');
 var uuid = require('uuid');
+var nock = require('nock');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
+var nock__default = /*#__PURE__*/_interopDefaultLegacy(nock);
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -68,6 +70,25 @@ function __generator(thisArg, body) {
     }
 }
 
+/**
+ * @jest-environment node
+ */
+nock__default['default'].disableNetConnect();
+var BASE_URL = 'http://127.0.0.1:16732';
+var SESSION = {
+    operator: {
+        name: 'Иванов',
+        vatin: '123654789507',
+    },
+};
+var Atol = init({
+    session: SESSION,
+    baseUrl: BASE_URL,
+});
+var delay = function (time) {
+    return new Promise(function (resolve) { return setTimeout(resolve, time); });
+};
+
 var TaskResultStatus;
 (function (TaskResultStatus) {
     TaskResultStatus["ready"] = "ready";
@@ -78,8 +99,15 @@ var TaskResultStatus;
     TaskResultStatus["blocked"] = "blocked";
     TaskResultStatus["canceled"] = "canceled";
 })(TaskResultStatus || (TaskResultStatus = {}));
+var RequestTypes;
+(function (RequestTypes) {
+    RequestTypes["openShift"] = "openShift";
+    RequestTypes["closeShift"] = "closeShift";
+})(RequestTypes || (RequestTypes = {}));
 
 var DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
+var MAX_CALLS = 3;
+var DELAY_BETWEEN_CALLS = 500;
 var API = (function (session, baseURL) {
     if (baseURL === void 0) { baseURL = DEFAULT_BASE_URL; }
     var API = axios__default['default'].create({
@@ -93,42 +121,66 @@ var API = (function (session, baseURL) {
     var get = function (uuid) {
         return API.get("/api/v2/request/" + uuid);
     };
+    /*
+     * Открытие смены
+     */
     var openShift = function () {
         var uuid$1 = uuid.v1();
         return post(uuid$1, [
             {
-                type: 'openShift',
+                type: RequestTypes[RequestTypes.openShift],
                 operator: operator,
             },
         ]);
     };
-    var checkStatus = function (uuid) { return __awaiter(void 0, void 0, void 0, function () {
-        var results, status_1, error_1;
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, get(uuid)];
-                case 1:
-                    results = (_b.sent()).data.results;
-                    status_1 = (_a = results === null || results === void 0 ? void 0 : results[0]) === null || _a === void 0 ? void 0 : _a.status;
-                    return [2 /*return*/, status_1];
-                case 2:
-                    error_1 = _b.sent();
-                    console.log(error_1);
-                    return [2 /*return*/, TaskResultStatus['error']];
-                case 3: return [2 /*return*/];
-            }
+    /*
+     * Закрытие смены
+     */
+    var closeShift = function () {
+        var uuid$1 = uuid.v1();
+        return post(uuid$1, [
+            {
+                type: RequestTypes[RequestTypes.closeShift],
+                operator: operator,
+            },
+        ]);
+    };
+    var checkStatus = function (uuid, callIndex) {
+        if (callIndex === void 0) { callIndex = 0; }
+        return __awaiter(void 0, void 0, void 0, function () {
+            var results, status_1, error_1;
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, get(uuid)];
+                    case 1:
+                        results = (_b.sent()).data.results;
+                        status_1 = (_a = results === null || results === void 0 ? void 0 : results[0]) === null || _a === void 0 ? void 0 : _a.status;
+                        if (callIndex >= MAX_CALLS) {
+                            throw new Error('MAX_CALLS LIMIT!');
+                        }
+                        if (!(status_1 !== TaskResultStatus['ready'])) return [3 /*break*/, 3];
+                        return [4 /*yield*/, delay(DELAY_BETWEEN_CALLS)];
+                    case 2:
+                        _b.sent();
+                        return [2 /*return*/, checkStatus(uuid, callIndex + 1)];
+                    case 3: return [2 /*return*/, status_1];
+                    case 4:
+                        error_1 = _b.sent();
+                        return [2 /*return*/, TaskResultStatus['error']];
+                    case 5: return [2 /*return*/];
+                }
+            });
         });
-    }); };
-    return { openShift: openShift, checkStatus: checkStatus };
+    };
+    return { openShift: openShift, closeShift: closeShift, checkStatus: checkStatus };
 });
 
 var init = function (_a) {
     var session = _a.session, baseUrl = _a.baseUrl;
-    var api = API(session, baseUrl);
-    return api;
+    return API(session, baseUrl);
 };
 
 exports.init = init;
