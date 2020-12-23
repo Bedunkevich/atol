@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { nock, Atol, BASE_URL, SESSION } from '../tests';
+import { nock, Atol, BASE_URL, SESSION } from '../setup';
 import { TaskResultStatus, RequestTypes } from '../types';
 
 const FAKE_UUID = '24efab70-4502-11eb-a6c8-1f6f568dbd0e';

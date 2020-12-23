@@ -22,7 +22,4 @@ const Atol: AtolDriverInterface = init({
   baseUrl: BASE_URL,
 });
 
-const delay = (time: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, time));
-
-export { Atol, nock, BASE_URL, SESSION, delay };
+export { Atol, nock, BASE_URL, SESSION };

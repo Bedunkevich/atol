@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 import { v1 as timestampUUID } from 'uuid';
-import { delay } from './tests';
+import { delay } from './helpers';
 import {
   Session,
   AtolResponce,

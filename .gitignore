@@ -7,8 +7,9 @@
 # Node.js modules.
 node_modules/
 
-# dist
+# build
 dist
+types
 
 # NPM's shrinkwrap.
 # We're using `package-lock.json` instead.
