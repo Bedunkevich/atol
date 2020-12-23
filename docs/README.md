@@ -35,7 +35,7 @@
 
 Ƭ  **AtolDriverInterface**: { checkStatus: (uuid: string, callIndex?: undefined \| number) => Promise<[TaskResultStatus](enums/taskresultstatus.md)\> ; closeShift: () => AxiosPromise<[AtolResponce](README.md#atolresponce)\> ; openShift: () => AxiosPromise<[AtolResponce](README.md#atolresponce)\>  }
 
-*Defined in [types.ts:37](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L37)*
+*Defined in [types.ts:37](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/types.ts#L37)*
 
 #### Type declaration:
 
@@ -51,7 +51,7 @@ ___
 
 Ƭ  **AtolResponce**: { uuid: string  }
 
-*Defined in [types.ts:3](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L3)*
+*Defined in [types.ts:3](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/types.ts#L3)*
 
 #### Type declaration:
 
@@ -65,7 +65,7 @@ ___
 
 Ƭ  **Session**: { operator: { name: string ; vatin: string  }  }
 
-*Defined in [types.ts:30](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L30)*
+*Defined in [types.ts:30](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/types.ts#L30)*
 
 #### Type declaration:
 
@@ -79,7 +79,7 @@ ___
 
 Ƭ  **TaskResultResponce**: { results: { error: { code: number ; description: string  } ; status: [TaskResultStatus](enums/taskresultstatus.md)  }[]  }
 
-*Defined in [types.ts:20](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L20)*
+*Defined in [types.ts:20](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/types.ts#L20)*
 
 #### Type declaration:
 
@@ -93,7 +93,7 @@ Name | Type |
 
 • `Const` **DEFAULT\_BASE\_URL**: \"http://127.0.0.1:16732\" = "http://127.0.0.1:16732"
 
-*Defined in [api.ts:13](https://github.com/Bedunkevich/atol/blob/e822279/src/api.ts#L13)*
+*Defined in [api.ts:13](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/api.ts#L13)*
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 • `Const` **DELAY\_BETWEEN\_CALLS**: 500 = 500
 
-*Defined in [api.ts:15](https://github.com/Bedunkevich/atol/blob/e822279/src/api.ts#L15)*
+*Defined in [api.ts:15](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/api.ts#L15)*
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 • `Const` **MAX\_CALLS**: 3 = 3
 
-*Defined in [api.ts:14](https://github.com/Bedunkevich/atol/blob/e822279/src/api.ts#L14)*
+*Defined in [api.ts:14](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/api.ts#L14)*
 
 ## Functions
 
@@ -117,7 +117,7 @@ ___
 
 ▸ `Const`**delay**(`time`: number): Promise<void\>
 
-*Defined in [helpers.ts:1](https://github.com/Bedunkevich/atol/blob/e822279/src/helpers.ts#L1)*
+*Defined in [helpers.ts:1](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/helpers.ts#L1)*
 
 #### Parameters:
 
@@ -133,7 +133,7 @@ ___
 
 ▸ `Const`**init**(`__namedParameters`: { baseUrl: string ; session: [Session](README.md#session)  }): [AtolDriverInterface](README.md#atoldriverinterface)
 
-*Defined in [index.ts:4](https://github.com/Bedunkevich/atol/blob/e822279/src/index.ts#L4)*
+*Defined in [index.ts:4](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/index.ts#L4)*
 
 #### Parameters:
 

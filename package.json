@@ -1,6 +1,6 @@
 {
   "name": "@bedunkevich/atol",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "",
   "cdn": "dist/index.umd.js",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.0.1",
+    "@rollup/plugin-node-resolve": "10.0.0",
     "@types/jest": "^26.0.14",
     "@types/prettier": "^2.1.2",
     "@types/uuid": "^8.3.0",

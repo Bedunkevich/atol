@@ -1,14 +1,14 @@
 /*!
- * @bedunkevich/atol v0.0.2
+ * @bedunkevich/atol v0.0.5
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('http'), require('https'), require('url'), require('stream'), require('assert'), require('tty'), require('util'), require('os'), require('zlib')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'http', 'https', 'url', 'stream', 'assert', 'tty', 'util', 'os', 'zlib'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.atol = {}, global.http, global.https, global.url, global.require$$0, global.assert, global.tty, global.util, global.os, global.zlib));
-}(this, (function (exports, http, https, url, require$$0, assert, tty, util, os, zlib) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('http'), require('https'), require('url'), require('stream'), require('assert'), require('tty'), require('util'), require('os'), require('zlib'), require('crypto')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'http', 'https', 'url', 'stream', 'assert', 'tty', 'util', 'os', 'zlib', 'crypto'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.atol = {}, global.http, global.https, global.url, global.require$$0, global.assert, global.tty, global.util, global.os, global.zlib, global.crypto));
+}(this, (function (exports, http, https, url, require$$0, assert, tty, util, os, zlib, crypto) { 'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -21,6 +21,7 @@
     var util__default = /*#__PURE__*/_interopDefaultLegacy(util);
     var os__default = /*#__PURE__*/_interopDefaultLegacy(os);
     var zlib__default = /*#__PURE__*/_interopDefaultLegacy(zlib);
+    var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -3560,24 +3561,16 @@
 
     var axios$1 = axios_1;
 
-    // Unique ID creation requires a high quality random # generator. In the browser we therefore
-    // require the crypto API and do not support built-in fallback to lower quality random number
-    // generators (like Math.random()).
-    var getRandomValues;
-    var rnds8 = new Uint8Array(16);
-    function rng() {
-      // lazy load so that environments that need to polyfill have a chance to do so
-      if (!getRandomValues) {
-        // getRandomValues needs to be invoked in a context where "this" is a Crypto implementation. Also,
-        // find the complete implementation of crypto (msCrypto) on IE11.
-        getRandomValues = typeof crypto !== 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto !== 'undefined' && typeof msCrypto.getRandomValues === 'function' && msCrypto.getRandomValues.bind(msCrypto);
+    const rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
 
-        if (!getRandomValues) {
-          throw new Error('crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported');
-        }
+    let poolPtr = rnds8Pool.length;
+    function rng() {
+      if (poolPtr > rnds8Pool.length - 16) {
+        crypto__default['default'].randomFillSync(rnds8Pool);
+        poolPtr = 0;
       }
 
-      return getRandomValues(rnds8);
+      return rnds8Pool.slice(poolPtr, poolPtr += 16);
     }
 
     var REGEX = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
@@ -3591,17 +3584,16 @@
      * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
      */
 
-    var byteToHex = [];
+    const byteToHex = [];
 
-    for (var i = 0; i < 256; ++i) {
+    for (let i = 0; i < 256; ++i) {
       byteToHex.push((i + 0x100).toString(16).substr(1));
     }
 
-    function stringify(arr) {
-      var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    function stringify(arr, offset = 0) {
       // Note: Be careful editing this code!  It's been tuned for performance
       // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
-      var uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase(); // Consistency check for valid UUID.  If this throws, it's likely due to one
+      const uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase(); // Consistency check for valid UUID.  If this throws, it's likely due to one
       // of the following:
       // - One or more input array values don't map to a hex octet (leading to
       // "undefined" in the uuid)
@@ -3618,25 +3610,25 @@
     // Inspired by https://github.com/LiosK/UUID.js
     // and http://docs.python.org/library/uuid.html
 
-    var _nodeId;
+    let _nodeId;
 
-    var _clockseq; // Previous uuid creation time
+    let _clockseq; // Previous uuid creation time
 
 
-    var _lastMSecs = 0;
-    var _lastNSecs = 0; // See https://github.com/uuidjs/uuid for API details
+    let _lastMSecs = 0;
+    let _lastNSecs = 0; // See https://github.com/uuidjs/uuid for API details
 
     function v1(options, buf, offset) {
-      var i = buf && offset || 0;
-      var b = buf || new Array(16);
+      let i = buf && offset || 0;
+      const b = buf || new Array(16);
       options = options || {};
-      var node = options.node || _nodeId;
-      var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq; // node and clockseq need to be initialized to random values if they're not
+      let node = options.node || _nodeId;
+      let clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq; // node and clockseq need to be initialized to random values if they're not
       // specified.  We do this lazily to minimize issues related to insufficient
       // system entropy.  See #189
 
       if (node == null || clockseq == null) {
-        var seedBytes = options.random || (options.rng || rng)();
+        const seedBytes = options.random || (options.rng || rng)();
 
         if (node == null) {
           // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
@@ -3653,12 +3645,12 @@
       // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
 
 
-      var msecs = options.msecs !== undefined ? options.msecs : Date.now(); // Per 4.2.1.2, use count of uuid's generated during the current clock
+      let msecs = options.msecs !== undefined ? options.msecs : Date.now(); // Per 4.2.1.2, use count of uuid's generated during the current clock
       // cycle to simulate higher resolution clock
 
-      var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1; // Time since last uuid creation (in msecs)
+      let nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1; // Time since last uuid creation (in msecs)
 
-      var dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 10000; // Per 4.2.1.2, Bump clockseq on clock regression
+      const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 10000; // Per 4.2.1.2, Bump clockseq on clock regression
 
       if (dt < 0 && options.clockseq === undefined) {
         clockseq = clockseq + 1 & 0x3fff;
@@ -3681,13 +3673,13 @@
 
       msecs += 12219292800000; // `time_low`
 
-      var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+      const tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
       b[i++] = tl >>> 24 & 0xff;
       b[i++] = tl >>> 16 & 0xff;
       b[i++] = tl >>> 8 & 0xff;
       b[i++] = tl & 0xff; // `time_mid`
 
-      var tmh = msecs / 0x100000000 * 10000 & 0xfffffff;
+      const tmh = msecs / 0x100000000 * 10000 & 0xfffffff;
       b[i++] = tmh >>> 8 & 0xff;
       b[i++] = tmh & 0xff; // `time_high_and_version`
 
@@ -3699,7 +3691,7 @@
 
       b[i++] = clockseq & 0xff; // `node`
 
-      for (var n = 0; n < 6; ++n) {
+      for (let n = 0; n < 6; ++n) {
         b[i + n] = node[n];
       }
 

@@ -2,6 +2,7 @@
 
 import { terser } from 'rollup-plugin-terser';
 import typescript2 from 'rollup-plugin-typescript2';
+
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
@@ -58,14 +59,14 @@ const options = {
     }),
   ],
   plugins: [
+    json(),
+    resolve(),
+    commonjs(),
     typescript2({
       clean: true,
       useTsconfigDeclarationDir: true,
       tsconfig: './tsconfig.bundle.json',
     }),
-    json(),
-    resolve(),
-    commonjs(),
   ],
 };
 

@@ -17,7 +17,7 @@
 
 •  **closeShift**:  = "closeShift"
 
-*Defined in [types.ts:17](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L17)*
+*Defined in [types.ts:17](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/types.ts#L17)*
 
 ___
 
@@ -25,4 +25,4 @@ ___
 
 •  **openShift**:  = "openShift"
 
-*Defined in [types.ts:16](https://github.com/Bedunkevich/atol/blob/e822279/src/types.ts#L16)*
+*Defined in [types.ts:16](https://github.com/Bedunkevich/atol/blob/11dbf4d/src/types.ts#L16)*

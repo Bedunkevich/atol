@@ -1,5 +1,5 @@
 import axios, { AxiosPromise } from 'axios';
-import { v1 as timestampUUID } from 'uuid';
+import * as uuidBundle from 'uuid';
 import { delay } from './helpers';
 import {
   Session,
@@ -37,7 +37,7 @@ export default (
    * Открытие смены
    */
   const openShift = (): AxiosPromise<AtolResponce> => {
-    const uuid = timestampUUID();
+    const uuid = uuidBundle.v1();
     return post(uuid, [
       {
         type: RequestTypes[RequestTypes.openShift],
@@ -50,7 +50,7 @@ export default (
    * Закрытие смены
    */
   const closeShift = (): AxiosPromise<AtolResponce> => {
-    const uuid = timestampUUID();
+    const uuid = uuidBundle.v1();
     return post(uuid, [
       {
         type: RequestTypes[RequestTypes.closeShift],
