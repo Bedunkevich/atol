@@ -7,7 +7,7 @@ import { TaskResultStatus, RequestTypes } from '../types';
 
 const FAKE_UUID = '24efab70-4502-11eb-a6c8-1f6f568dbd0e';
 
-jest.mock('uuid', () => ({
+jest.mock('../uuid', () => ({
   v1: () => FAKE_UUID,
 }));
 

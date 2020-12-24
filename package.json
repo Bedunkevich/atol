@@ -1,6 +1,6 @@
 {
   "name": "@bedunkevich/atol",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "cdn": "dist/index.umd.js",
   "main": "dist/index.js",
@@ -10,14 +10,11 @@
   "jsdelivr": "dist/index.umd.js",
   "umd:main": "dist/index.umd.js",
   "dependencies": {
-    "axios": "^0.21.1",
-    "uuid": "^8.3.2"
+    "axios": "^0.21.1"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "10.0.0",
     "@types/jest": "^26.0.14",
+    "@types/node": "^14.14.16",
     "@types/prettier": "^2.1.2",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
