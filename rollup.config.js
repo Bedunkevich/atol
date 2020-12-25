@@ -2,6 +2,7 @@
 
 import { terser } from 'rollup-plugin-terser';
 import typescript2 from 'rollup-plugin-typescript2';
+import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
 /**
@@ -54,6 +55,7 @@ const options = {
     }),
   ],
   plugins: [
+    json(),
     typescript2({
       clean: true,
       useTsconfigDeclarationDir: true,

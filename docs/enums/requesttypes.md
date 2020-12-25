@@ -23,7 +23,7 @@
 
 •  **buy**:  = "buy"
 
-*Defined in [types.ts:29](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L29)*
+*Defined in [types.ts:29](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L29)*
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 •  **buyReturn**:  = "buyReturn"
 
-*Defined in [types.ts:30](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L30)*
+*Defined in [types.ts:30](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L30)*
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 •  **cashIn**:  = "cashIn"
 
-*Defined in [types.ts:25](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L25)*
+*Defined in [types.ts:25](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L25)*
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 •  **cashOut**:  = "cashOut"
 
-*Defined in [types.ts:26](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L26)*
+*Defined in [types.ts:26](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L26)*
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 •  **closeShift**:  = "closeShift"
 
-*Defined in [types.ts:24](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L24)*
+*Defined in [types.ts:24](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L24)*
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 •  **openShift**:  = "openShift"
 
-*Defined in [types.ts:23](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L23)*
+*Defined in [types.ts:23](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L23)*
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 •  **sell**:  = "sell"
 
-*Defined in [types.ts:27](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L27)*
+*Defined in [types.ts:27](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L27)*
 
 ___
 
@@ -79,4 +79,4 @@ ___
 
 •  **sellReturn**:  = "sellReturn"
 
-*Defined in [types.ts:28](https://github.com/Bedunkevich/atol/blob/b144388/src/types.ts#L28)*
+*Defined in [types.ts:28](https://github.com/Bedunkevich/atol/blob/94055b4/src/types.ts#L28)*

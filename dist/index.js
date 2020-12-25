@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.0.6
+ * @bedunkevich/atol v0.0.7
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -9,10 +9,12 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var axios = require('axios');
+var Ajv = require('ajv');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
+var Ajv__default = /*#__PURE__*/_interopDefaultLegacy(Ajv);
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -28,6 +30,17 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 
 function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -66,6 +79,56 @@ function __generator(thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 }
+
+var $schema = "http://json-schema.org/draft-07/schema#";
+var $ref = "#/definitions/Session";
+var definitions = {
+	Session: {
+		type: "object",
+		properties: {
+			taxationType: {
+				$ref: "#/definitions/TaxationType"
+			},
+			operator: {
+				type: "object",
+				properties: {
+					name: {
+						type: "string"
+					},
+					vatin: {
+						type: "string"
+					}
+				},
+				required: [
+					"name",
+					"vatin"
+				],
+				additionalProperties: false
+			}
+		},
+		required: [
+			"taxationType",
+			"operator"
+		],
+		additionalProperties: false
+	},
+	TaxationType: {
+		type: "string",
+		"enum": [
+			"osn",
+			"usnIncome",
+			"usnIncomeOutcome",
+			"envd",
+			"esn",
+			"patent"
+		]
+	}
+};
+var SessionSchema = {
+	$schema: $schema,
+	$ref: $ref,
+	definitions: definitions
+};
 
 var rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
 var poolPtr = rnds8Pool.length;
@@ -233,18 +296,34 @@ var RequestTypes;
 (function (RequestTypes) {
     RequestTypes["openShift"] = "openShift";
     RequestTypes["closeShift"] = "closeShift";
+    RequestTypes["cashIn"] = "cashIn";
+    RequestTypes["cashOut"] = "cashOut";
+    RequestTypes["sell"] = "sell";
+    RequestTypes["sellReturn"] = "sellReturn";
+    RequestTypes["buy"] = "buy";
+    RequestTypes["buyReturn"] = "buyReturn";
 })(RequestTypes || (RequestTypes = {}));
 
 var DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
 var MAX_CALLS = 3;
-var DELAY_BETWEEN_CALLS = 500;
+var DELAY_BETWEEN_CALLS = 1000;
+var ajv = new Ajv__default['default']({
+    allErrors: true,
+    removeAdditional: true,
+    useDefaults: true,
+});
 var API = (function (session, baseURL) {
     if (baseURL === void 0) { baseURL = DEFAULT_BASE_URL; }
     var API = axios__default['default'].create({
         baseURL: baseURL,
         timeout: 1000,
     });
-    var operator = session.operator;
+    var validate = ajv.compile(SessionSchema);
+    if (!validate(session)) {
+        console.log('%c[ATOL] [validation]', 'color:red', ajv.errorsText(validate.errors));
+        throw new Error(ajv.errorsText(validate.errors));
+    }
+    var operator = session.operator, taxationType = session.taxationType;
     var post = function (uuid, request) {
         return API.post('/api/v2/request', { uuid: uuid, request: request });
     };
@@ -275,6 +354,45 @@ var API = (function (session, baseURL) {
             },
         ]);
     };
+    /*
+     * Внесение наличных
+     */
+    var cashIn = function (cashSum) {
+        var uuid = v1();
+        return post(uuid, [
+            {
+                type: RequestTypes[RequestTypes.cashIn],
+                operator: operator,
+            },
+            cashSum,
+        ]);
+    };
+    /*
+     * Выплата наличных
+     */
+    var cashOut = function (cashSum) {
+        var uuid = v1();
+        return post(uuid, [
+            {
+                type: RequestTypes[RequestTypes.cashOut],
+                operator: operator,
+            },
+            cashSum,
+        ]);
+    };
+    /*
+     * Чек прихода – продажа
+     */
+    var sell = function (data) {
+        var uuid = v1();
+        return post(uuid, [
+            __assign({ type: RequestTypes[RequestTypes.sell], taxationType: taxationType,
+                operator: operator }, data),
+        ]);
+    };
+    /*
+     * Проверка статуса задания
+     */
     var checkStatus = function (uuid, callIndex) {
         if (callIndex === void 0) { callIndex = 0; }
         return __awaiter(void 0, void 0, void 0, function () {
@@ -288,6 +406,7 @@ var API = (function (session, baseURL) {
                     case 1:
                         results = (_b.sent()).data.results;
                         status_1 = (_a = results === null || results === void 0 ? void 0 : results[0]) === null || _a === void 0 ? void 0 : _a.status;
+                        console.log('%c[ATOL] [checkStatus]', 'color:green', results);
                         if (callIndex >= MAX_CALLS) {
                             throw new Error('MAX_CALLS LIMIT!');
                         }
@@ -299,13 +418,14 @@ var API = (function (session, baseURL) {
                     case 3: return [2 /*return*/, status_1];
                     case 4:
                         error_1 = _b.sent();
+                        console.log('%c[ATOL] [checkStatus]', 'color:red', error_1);
                         return [2 /*return*/, TaskResultStatus['error']];
                     case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    return { openShift: openShift, closeShift: closeShift, checkStatus: checkStatus };
+    return { openShift: openShift, closeShift: closeShift, cashIn: cashIn, cashOut: cashOut, sell: sell, checkStatus: checkStatus };
 });
 
 var init = function (_a) {
