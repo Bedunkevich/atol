@@ -6,8 +6,8 @@ import stringify from './stringify';
 // Inspired by https://github.com/LiosK/UUID.js
 // and http://docs.python.org/library/uuid.html
 
-let _nodeId: any;
-let _clockseq: any;
+let _nodeId: unknown;
+let _clockseq: unknown;
 
 // Previous uuid creation time
 let _lastMSecs = 0;

@@ -1,6 +1,6 @@
 {
   "name": "@bedunkevich/atol",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "cdn": "dist/index.umd.js",
   "main": "dist/index.js",
@@ -10,6 +10,7 @@
   "jsdelivr": "dist/index.umd.js",
   "umd:main": "dist/index.umd.js",
   "dependencies": {
+    "ajv": "^7.0.2",
     "axios": "^0.21.1"
   },
   "devDependencies": {

@@ -1,18 +1,28 @@
 import axios, { AxiosPromise } from 'axios';
+import Ajv from 'ajv';
+import SessionSchema from './validation/Session.json';
 import { v1 as buildUUID } from './uuid';
 import { delay } from './helpers';
 import {
   Session,
-  AtolResponce,
+  TaskResponce,
   TaskResultResponce,
   TaskResultStatus,
   RequestTypes,
   AtolDriverInterface,
+  Sell,
+  SellRequest,
 } from './types';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
 const MAX_CALLS = 3;
-const DELAY_BETWEEN_CALLS = 500;
+const DELAY_BETWEEN_CALLS = 1000;
+
+const ajv = new Ajv({
+  allErrors: true,
+  removeAdditional: true,
+  useDefaults: true,
+});
 
 export default (
   session: Session,
@@ -23,9 +33,23 @@ export default (
     timeout: 1000,
   });
 
-  const { operator } = session;
+  const validate = ajv.compile(SessionSchema);
 
-  const post = (uuid: string, request: unknown): AxiosPromise<AtolResponce> => {
+  if (!validate(session)) {
+    console.log(
+      '%c[ATOL] [validation]',
+      'color:red',
+      ajv.errorsText(validate.errors),
+    );
+    throw new Error(ajv.errorsText(validate.errors));
+  }
+
+  const { operator, taxationType } = session;
+
+  const post = <T = unknown>(
+    uuid: string,
+    request: T,
+  ): AxiosPromise<TaskResponce> => {
     return API.post('/api/v2/request', { uuid, request });
   };
 
@@ -36,7 +60,7 @@ export default (
   /*
    * Открытие смены
    */
-  const openShift = (): AxiosPromise<AtolResponce> => {
+  const openShift = (): AxiosPromise<TaskResponce> => {
     const uuid = buildUUID();
     return post(uuid, [
       {
@@ -49,7 +73,7 @@ export default (
   /*
    * Закрытие смены
    */
-  const closeShift = (): AxiosPromise<AtolResponce> => {
+  const closeShift = (): AxiosPromise<TaskResponce> => {
     const uuid = buildUUID();
     return post(uuid, [
       {
@@ -59,6 +83,52 @@ export default (
     ]);
   };
 
+  /*
+   * Внесение наличных
+   */
+  const cashIn = (cashSum: number): AxiosPromise<TaskResponce> => {
+    const uuid = buildUUID();
+    return post(uuid, [
+      {
+        type: RequestTypes[RequestTypes.cashIn],
+        operator,
+      },
+      cashSum,
+    ]);
+  };
+
+  /*
+   * Выплата наличных
+   */
+  const cashOut = (cashSum: number): AxiosPromise<TaskResponce> => {
+    const uuid = buildUUID();
+    return post(uuid, [
+      {
+        type: RequestTypes[RequestTypes.cashOut],
+        operator,
+      },
+      cashSum,
+    ]);
+  };
+
+  /*
+   * Чек прихода – продажа
+   */
+  const sell = (data: Sell): AxiosPromise<TaskResponce> => {
+    const uuid = buildUUID();
+    return post<SellRequest[]>(uuid, [
+      {
+        type: RequestTypes[RequestTypes.sell],
+        taxationType,
+        operator,
+        ...data,
+      },
+    ]);
+  };
+
+  /*
+   * Проверка статуса задания
+   */
   const checkStatus = async (
     uuid: string,
     callIndex = 0,
@@ -68,6 +138,7 @@ export default (
         data: { results },
       } = await get(uuid);
       const status = results?.[0]?.status;
+      console.log('%c[ATOL] [checkStatus]', 'color:green', results);
 
       if (callIndex >= MAX_CALLS) {
         throw new Error('MAX_CALLS LIMIT!');
@@ -79,9 +150,10 @@ export default (
       }
       return status;
     } catch (error) {
+      console.log('%c[ATOL] [checkStatus]', 'color:red', error);
       return TaskResultStatus['error'];
     }
   };
 
-  return { openShift, closeShift, checkStatus };
+  return { openShift, closeShift, cashIn, cashOut, sell, checkStatus };
 };
