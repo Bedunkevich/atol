@@ -3,6 +3,9 @@
 
 const configuration = {
   preset: 'ts-jest',
+  globals: {
+    window: {},
+  },
 };
 
 module.exports = configuration;

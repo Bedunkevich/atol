@@ -1,1 +1,1 @@
-{"version":3,"file":"api.d.ts","sourceRoot":"","sources":["../src/api.ts"],"names":[],"mappings":"AAKA,OAAO,EACL,OAAO,EAKP,mBAAmB,EAGpB,MAAM,SAAS,CAAC;kCAaN,OAAO,YACP,MAAM,KACd,mBAAmB;AAHtB,wBAoIE"}
+{"version":3,"file":"api.d.ts","sourceRoot":"","sources":["../src/api.ts"],"names":[],"mappings":"AAIA,OAAO,EACL,OAAO,EAKP,mBAAmB,EAGpB,MAAM,SAAS,CAAC;kCAmBN,OAAO,YACP,MAAM,KACd,mBAAmB;AAHtB,wBAqKE"}

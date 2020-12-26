@@ -3,9 +3,6 @@
 import { terser } from 'rollup-plugin-terser';
 import typescript2 from 'rollup-plugin-typescript2';
 import json from '@rollup/plugin-json';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import pkg from './package.json';
 
 /**
@@ -50,18 +47,22 @@ const options = {
     createOutputOptions({
       file: './dist/index.umd.js',
       format: 'umd',
+      globals: {
+        axios: 'axios',
+      },
     }),
     createOutputOptions({
       file: './dist/index.umd.min.js',
       format: 'umd',
       plugins: [terser()],
+      globals: {
+        axios: 'axios',
+      },
     }),
   ],
+  external: ['axios'],
   plugins: [
     json(),
-    nodePolyfills(),
-    nodeResolve(),
-    commonjs(),
     typescript2({
       clean: true,
       useTsconfigDeclarationDir: true,

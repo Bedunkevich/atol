@@ -1,4 +1,11 @@
 import type { AxiosPromise } from 'axios';
+declare global {
+    interface Window {
+        ajv7: {
+            default: any;
+        };
+    }
+}
 export declare type TaskResponce = {
     uuid: string;
     number: number;
@@ -27,7 +34,8 @@ export declare enum RequestTypes {
     sell = "sell",
     sellReturn = "sellReturn",
     buy = "buy",
-    buyReturn = "buyReturn"
+    buyReturn = "buyReturn",
+    reportX = "reportX"
 }
 export declare type TaxationType = 'osn' | 'usnIncome' | 'usnIncomeOutcome' | 'envd' | 'esn' | 'patent';
 export declare type TaskResultResponce = {
@@ -43,7 +51,7 @@ export declare type Session = {
     taxationType: TaxationType;
     operator: {
         name: string;
-        vatin: string;
+        vatin?: string;
     };
 };
 export declare type PositionTax = 'none' | 'vat0' | 'vat10' | 'vat110' | 'vat18' | 'vat118' | 'vat20' | 'vat120';
@@ -80,11 +88,12 @@ export declare type SellRequest = {
     type: RequestTypes;
 } & Session & Sell;
 export declare type AtolDriverInterface = {
-    openShift: () => AxiosPromise<TaskResponce>;
+    openShift: () => Promise<AxiosPromise<TaskResponce>>;
     closeShift: () => AxiosPromise<TaskResponce>;
     cashIn: (sum: number) => AxiosPromise<TaskResponce>;
     cashOut: (sum: number) => AxiosPromise<TaskResponce>;
     sell: (data: Sell) => AxiosPromise<TaskResponce>;
+    reportX: () => AxiosPromise<TaskResponce>;
     checkStatus: (uuid: string, callIndex?: number) => Promise<TaskResultStatus>;
 };
 //# sourceMappingURL=types.d.ts.map

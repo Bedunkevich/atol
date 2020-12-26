@@ -1,5 +1,4 @@
 import axios, { AxiosPromise } from 'axios';
-import Ajv from 'ajv';
 import SessionSchema from './validation/Session.json';
 import { v1 as buildUUID } from './uuid';
 import { delay } from './helpers';
@@ -18,11 +17,17 @@ const DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
 const MAX_CALLS = 3;
 const DELAY_BETWEEN_CALLS = 1000;
 
-const ajv = new Ajv({
-  allErrors: true,
-  removeAdditional: true,
-  useDefaults: true,
-});
+let ajv: any;
+
+if (window.ajv7) {
+  const Ajv = window.ajv7.default;
+
+  ajv = new Ajv({
+    allErrors: true,
+    removeAdditional: true,
+    useDefaults: true,
+  });
+}
 
 export default (
   session: Session,
@@ -33,15 +38,17 @@ export default (
     timeout: 1000,
   });
 
-  const validate = ajv.compile(SessionSchema);
+  if (window.ajv7) {
+    const validate = ajv.compile(SessionSchema);
 
-  if (!validate(session)) {
-    console.log(
-      '%c[ATOL] [validation]',
-      'color:red',
-      ajv.errorsText(validate.errors),
-    );
-    throw new Error(ajv.errorsText(validate.errors));
+    if (!validate(session)) {
+      console.log(
+        '%c[ATOL] [validation]',
+        'color:red',
+        ajv.errorsText(validate.errors),
+      );
+      throw new Error(ajv.errorsText(validate.errors));
+    }
   }
 
   const { operator, taxationType } = session;
@@ -60,14 +67,26 @@ export default (
   /*
    * Открытие смены
    */
-  const openShift = (): AxiosPromise<TaskResponce> => {
+  const openShift = async (): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
-    return post(uuid, [
-      {
-        type: RequestTypes[RequestTypes.openShift],
-        operator,
-      },
-    ]);
+    console.log(`%c[ATOL] [openShift] ${uuid}`, 'color:green');
+    try {
+      const responce = await post(uuid, [
+        {
+          type: RequestTypes[RequestTypes.openShift],
+          operator,
+        },
+      ]);
+      console.log(`%c[ATOL] [openShift] SUCCESS`, 'color:green', responce.data);
+      return responce;
+    } catch (error) {
+      console.log(
+        `%c[ATOL] [openShift] FAIL`,
+        'color:red',
+        error.response.data,
+      );
+      return error;
+    }
   };
 
   /*
@@ -78,6 +97,19 @@ export default (
     return post(uuid, [
       {
         type: RequestTypes[RequestTypes.closeShift],
+        operator,
+      },
+    ]);
+  };
+
+  /*
+   * X-отчет
+   */
+  const reportX = (): AxiosPromise<TaskResponce> => {
+    const uuid = buildUUID();
+    return post(uuid, [
+      {
+        type: RequestTypes[RequestTypes.reportX],
         operator,
       },
     ]);
@@ -150,10 +182,16 @@ export default (
       }
       return status;
     } catch (error) {
-      console.log('%c[ATOL] [checkStatus]', 'color:red', error);
-      return TaskResultStatus['error'];
+      console.log('%c[ATOL] [checkStatus]', 'color:red', error.message);
+
+      if (callIndex >= MAX_CALLS) {
+        throw new Error('MAX_CALLS LIMIT!');
+      }
+
+      await delay(DELAY_BETWEEN_CALLS);
+      return checkStatus(uuid, callIndex + 1);
     }
   };
 
-  return { openShift, closeShift, cashIn, cashOut, sell, checkStatus };
+  return { openShift, closeShift, cashIn, cashOut, sell, reportX, checkStatus };
 };

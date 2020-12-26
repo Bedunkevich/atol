@@ -1,5 +1,13 @@
 import type { AxiosPromise } from 'axios';
 
+declare global {
+  interface Window {
+    ajv7: {
+      default: any;
+    };
+  }
+}
+
 export type TaskResponce =
   | { uuid: string; number: number; isBlocked: boolean; blockedUUID: string }
   | {
@@ -28,6 +36,7 @@ export enum RequestTypes {
   sellReturn = 'sellReturn',
   buy = 'buy',
   buyReturn = 'buyReturn',
+  reportX = 'reportX',
 }
 
 export type TaxationType =
@@ -52,7 +61,7 @@ export type Session = {
   taxationType: TaxationType;
   operator: {
     name: string;
-    vatin: string; // ИНН оператора
+    vatin?: string; // ИНН оператора
   };
 };
 
@@ -115,10 +124,11 @@ export type Sell = {
 export type SellRequest = { type: RequestTypes } & Session & Sell;
 
 export type AtolDriverInterface = {
-  openShift: () => AxiosPromise<TaskResponce>;
+  openShift: () => Promise<AxiosPromise<TaskResponce>>;
   closeShift: () => AxiosPromise<TaskResponce>;
   cashIn: (sum: number) => AxiosPromise<TaskResponce>;
   cashOut: (sum: number) => AxiosPromise<TaskResponce>;
   sell: (data: Sell) => AxiosPromise<TaskResponce>;
+  reportX: () => AxiosPromise<TaskResponce>;
   checkStatus: (uuid: string, callIndex?: number) => Promise<TaskResultStatus>;
 };
