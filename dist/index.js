@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.0
+ * @bedunkevich/atol v0.1.1
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -470,7 +470,7 @@ var API = (function (session, baseURL) {
     var fprint = {
         report: function (cb) {
             return __awaiter(this, void 0, void 0, function () {
-                var uuid, responce, error_3, _a, code, description;
+                var uuid, status_2, error_3, _a, code, description;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -483,8 +483,8 @@ var API = (function (session, baseURL) {
                             }
                             return [4 /*yield*/, checkStatus(uuid)];
                         case 2:
-                            responce = _b.sent();
-                            return [2 /*return*/, cb(true, responce)];
+                            status_2 = _b.sent();
+                            return [2 /*return*/, cb(true, { status: status_2 })];
                         case 3:
                             error_3 = _b.sent();
                             _a = error_3.response.data.error, code = _a.code, description = _a.description;
