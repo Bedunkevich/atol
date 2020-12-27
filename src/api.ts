@@ -1,5 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 import SessionSchema from './validation/Session.json';
+import SellSchema from './validation/Sell.json';
 import { v1 as buildUUID } from './uuid';
 import { delay } from './helpers';
 import {
@@ -13,6 +14,7 @@ import {
   SellRequest,
   LegacyCallback,
 } from './types';
+import { legacyMapSell } from './mapping';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
 const MAX_CALLS = 3;
@@ -30,6 +32,21 @@ if (window.ajv7) {
   });
 }
 
+const validateData = (schema: any, data: any) => {
+  if (window.ajv7) {
+    const validate = ajv.compile(schema);
+
+    if (!validate(data)) {
+      console.log(
+        '%c[ATOL] [validation]',
+        'color:red',
+        ajv.errorsText(validate.errors),
+      );
+      throw new Error(ajv.errorsText(validate.errors));
+    }
+  }
+};
+
 export default (
   session: Session,
   baseURL: string = DEFAULT_BASE_URL,
@@ -39,20 +56,9 @@ export default (
     timeout: 1000,
   });
 
-  if (window.ajv7) {
-    const validate = ajv.compile(SessionSchema);
-
-    if (!validate(session)) {
-      console.log(
-        '%c[ATOL] [validation]',
-        'color:red',
-        ajv.errorsText(validate.errors),
-      );
-      throw new Error(ajv.errorsText(validate.errors));
-    }
-  }
-
   const { operator, taxationType } = session;
+
+  validateData(SessionSchema, session);
 
   const post = <T = unknown>(
     uuid: string,
@@ -149,6 +155,9 @@ export default (
    */
   const sell = (data: Sell): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
+
+    validateData(SellSchema, data);
+
     return post<SellRequest[]>(uuid, [
       {
         type: RequestTypes[RequestTypes.sell],
@@ -205,7 +214,24 @@ export default (
           throw new Error('UUID cant be null | undefined!');
         }
         const status = await checkStatus(uuid);
-        return cb(true, { status });
+        return cb(true, { status, code: 0 });
+      } catch (error) {
+        const {
+          error: { code, description },
+        } = error.response.data;
+        return cb(false, { code, res: description });
+      }
+    },
+    sell: async function (data: any, cb: LegacyCallback) {
+      try {
+        const {
+          data: { uuid },
+        } = await sell(legacyMapSell(data) as any);
+        if (!uuid) {
+          throw new Error('UUID cant be null | undefined!');
+        }
+        const status = await checkStatus(uuid);
+        return cb(true, { status, code: 0 });
       } catch (error) {
         const {
           error: { code, description },

@@ -74,7 +74,7 @@ export declare type Item = {
     };
 };
 export declare type Payment = {
-    type: 'cash' | 0 | 'electronicaly' | 1 | 'prepaid' | 2 | 'credir' | 3 | 'other' | 4;
+    type: 'cash' | 0 | 'electronicaly' | 1 | 'prepaid' | 2 | 'credir' | 3 | 'other' | 4 | number;
     sum: number;
 };
 export declare type MinimumArray<T> = [T, ...T[]];

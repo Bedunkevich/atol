@@ -1,0 +1,33 @@
+{
+  "hurry": 0,
+  "number": "3-40",
+  "other_payments": [
+    { "value": 1000, "id": 1 },
+    { "value": 1929.5, "id": 2 }
+  ],
+  "payments": {
+    "card": 1929.5,
+    "cash": 1000
+  },
+  "products": [
+    {
+      "total": 2434.5,
+      "discount": 10,
+      "cost": 2705,
+      "quantity": 1,
+      "name": "E182S16583401",
+      "description": "BASE64CODE="
+    },
+    {
+      "total": 495,
+      "discount": 25,
+      "cost": 660,
+      "quantity": 1,
+      "name": "NK_UFA",
+      "description": "BASE64CODE="
+    }
+  ],
+  "topay": 2929.5,
+  "total_price": 2929.5,
+  "user": "Администратор"
+}

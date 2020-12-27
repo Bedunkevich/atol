@@ -24,7 +24,7 @@
 
 •  **buy**:  = "buy"
 
-*Defined in [types.ts:37](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L37)*
+*Defined in [types.ts:39](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L39)*
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 •  **buyReturn**:  = "buyReturn"
 
-*Defined in [types.ts:38](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L38)*
+*Defined in [types.ts:40](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L40)*
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 •  **cashIn**:  = "cashIn"
 
-*Defined in [types.ts:33](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L33)*
+*Defined in [types.ts:35](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L35)*
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 •  **cashOut**:  = "cashOut"
 
-*Defined in [types.ts:34](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L34)*
+*Defined in [types.ts:36](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L36)*
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 •  **closeShift**:  = "closeShift"
 
-*Defined in [types.ts:32](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L32)*
+*Defined in [types.ts:34](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L34)*
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 •  **openShift**:  = "openShift"
 
-*Defined in [types.ts:31](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L31)*
+*Defined in [types.ts:33](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L33)*
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 •  **reportX**:  = "reportX"
 
-*Defined in [types.ts:39](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L39)*
+*Defined in [types.ts:41](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L41)*
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 •  **sell**:  = "sell"
 
-*Defined in [types.ts:35](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L35)*
+*Defined in [types.ts:37](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L37)*
 
 ___
 
@@ -88,4 +88,4 @@ ___
 
 •  **sellReturn**:  = "sellReturn"
 
-*Defined in [types.ts:36](https://github.com/Bedunkevich/atol/blob/8492012/src/types.ts#L36)*
+*Defined in [types.ts:38](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L38)*

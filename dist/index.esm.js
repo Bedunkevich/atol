@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.1
+ * @bedunkevich/atol v0.1.2
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -117,6 +117,198 @@ var SessionSchema = {
 	$schema: $schema,
 	$ref: $ref,
 	definitions: definitions
+};
+
+var $schema$1 = "http://json-schema.org/draft-07/schema#";
+var $ref$1 = "#/definitions/Sell";
+var definitions$1 = {
+	Sell: {
+		type: "object",
+		properties: {
+			items: {
+				$ref: "#/definitions/MinimumArray<Item>"
+			},
+			payments: {
+				$ref: "#/definitions/MinimumArray<Payment>"
+			},
+			total: {
+				type: "number"
+			}
+		},
+		required: [
+			"items",
+			"payments"
+		],
+		additionalProperties: false
+	},
+	"MinimumArray<Item>": {
+		type: "array",
+		minItems: 1,
+		items: [
+			{
+				$ref: "#/definitions/Item"
+			}
+		],
+		additionalItems: {
+			$ref: "#/definitions/Item"
+		}
+	},
+	Item: {
+		type: "object",
+		properties: {
+			type: {
+				type: "string",
+				"enum": [
+					"position"
+				]
+			},
+			name: {
+				type: "string"
+			},
+			price: {
+				type: "number"
+			},
+			quantity: {
+				type: "number"
+			},
+			amount: {
+				type: "number"
+			},
+			infoDiscountSum: {
+				type: "number"
+			},
+			tax: {
+				type: "object",
+				properties: {
+					type: {
+						$ref: "#/definitions/PositionTax"
+					},
+					sum: {
+						type: "number"
+					}
+				},
+				required: [
+					"type"
+				],
+				additionalProperties: false
+			},
+			paymentMethod: {
+				type: "string",
+				"enum": [
+					"fullPrepayment",
+					"prepayment",
+					"advance",
+					"fullPayment",
+					"partialPayment",
+					"credit",
+					"creditPayment"
+				]
+			},
+			paymentObject: {
+				type: "string",
+				"enum": [
+					"commodity",
+					"excise",
+					"job",
+					"service"
+				]
+			},
+			department: {
+				type: "number"
+			},
+			markingCode: {
+				type: "object",
+				properties: {
+					type: {
+						type: "string",
+						"enum": [
+							"other",
+							"egais20",
+							"egais30"
+						]
+					},
+					mark: {
+						type: "string"
+					}
+				},
+				required: [
+					"mark"
+				],
+				additionalProperties: false
+			}
+		},
+		required: [
+			"type",
+			"name",
+			"price",
+			"quantity",
+			"amount",
+			"tax",
+			"markingCode"
+		],
+		additionalProperties: false
+	},
+	PositionTax: {
+		type: "string",
+		"enum": [
+			"none",
+			"vat0",
+			"vat10",
+			"vat110",
+			"vat18",
+			"vat118",
+			"vat20",
+			"vat120"
+		]
+	},
+	"MinimumArray<Payment>": {
+		type: "array",
+		minItems: 1,
+		items: [
+			{
+				$ref: "#/definitions/Payment"
+			}
+		],
+		additionalItems: {
+			$ref: "#/definitions/Payment"
+		}
+	},
+	Payment: {
+		type: "object",
+		properties: {
+			type: {
+				type: [
+					"string",
+					"number"
+				],
+				"enum": [
+					"cash",
+					0,
+					"electronicaly",
+					1,
+					"prepaid",
+					2,
+					"credir",
+					3,
+					"other",
+					4
+				]
+			},
+			sum: {
+				type: "number"
+			}
+		},
+		required: [
+			"type",
+			"sum"
+		],
+		additionalProperties: false
+	}
+};
+var SellSchema = {
+	$schema: $schema$1,
+	$ref: $ref$1,
+	definitions: definitions$1
 };
 
 var rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
@@ -294,6 +486,26 @@ var RequestTypes;
     RequestTypes["reportX"] = "reportX";
 })(RequestTypes || (RequestTypes = {}));
 
+var legacyMapSell = function (data) {
+    return {
+        items: data.products.map(function (item) { return ({
+            type: 'position',
+            name: item.name,
+            price: item.cost,
+            quantity: item.quantity,
+            amount: item.total,
+            tax: { type: 'none' },
+            markingCode: {
+                mark: item.description,
+            },
+        }); }),
+        payments: data.other_payments.map(function (payment) { return ({
+            type: payment.id - 1,
+            sum: payment.value,
+        }); }),
+    };
+};
+
 var DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
 var MAX_CALLS = 3;
 var DELAY_BETWEEN_CALLS = 1000;
@@ -306,20 +518,23 @@ if (window.ajv7) {
         useDefaults: true,
     });
 }
+var validateData = function (schema, data) {
+    if (window.ajv7) {
+        var validate = ajv.compile(schema);
+        if (!validate(data)) {
+            console.log('%c[ATOL] [validation]', 'color:red', ajv.errorsText(validate.errors));
+            throw new Error(ajv.errorsText(validate.errors));
+        }
+    }
+};
 var API = (function (session, baseURL) {
     if (baseURL === void 0) { baseURL = DEFAULT_BASE_URL; }
     var API = axios.create({
         baseURL: baseURL,
         timeout: 1000,
     });
-    if (window.ajv7) {
-        var validate = ajv.compile(SessionSchema);
-        if (!validate(session)) {
-            console.log('%c[ATOL] [validation]', 'color:red', ajv.errorsText(validate.errors));
-            throw new Error(ajv.errorsText(validate.errors));
-        }
-    }
     var operator = session.operator, taxationType = session.taxationType;
+    validateData(SessionSchema, session);
     var post = function (uuid, request) {
         return API.post('/api/v2/request', { uuid: uuid, request: request });
     };
@@ -412,6 +627,7 @@ var API = (function (session, baseURL) {
      */
     var sell = function (data) {
         var uuid = v1();
+        validateData(SellSchema, data);
         return post(uuid, [
             __assign({ type: RequestTypes[RequestTypes.sell], taxationType: taxationType,
                 operator: operator }, data),
@@ -476,10 +692,36 @@ var API = (function (session, baseURL) {
                             return [4 /*yield*/, checkStatus(uuid)];
                         case 2:
                             status_2 = _b.sent();
-                            return [2 /*return*/, cb(true, { status: status_2 })];
+                            return [2 /*return*/, cb(true, { status: status_2, code: 0 })];
                         case 3:
                             error_3 = _b.sent();
                             _a = error_3.response.data.error, code = _a.code, description = _a.description;
+                            return [2 /*return*/, cb(false, { code: code, res: description })];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        },
+        sell: function (data, cb) {
+            return __awaiter(this, void 0, void 0, function () {
+                var uuid, status_3, error_4, _a, code, description;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 3, , 4]);
+                            return [4 /*yield*/, sell(legacyMapSell(data))];
+                        case 1:
+                            uuid = (_b.sent()).data.uuid;
+                            if (!uuid) {
+                                throw new Error('UUID cant be null | undefined!');
+                            }
+                            return [4 /*yield*/, checkStatus(uuid)];
+                        case 2:
+                            status_3 = _b.sent();
+                            return [2 /*return*/, cb(true, { status: status_3, code: 0 })];
+                        case 3:
+                            error_4 = _b.sent();
+                            _a = error_4.response.data.error, code = _a.code, description = _a.description;
                             return [2 /*return*/, cb(false, { code: code, res: description })];
                         case 4: return [2 /*return*/];
                     }

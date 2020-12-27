@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/Sell",
+  "definitions": {
+    "Sell": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "$ref": "#/definitions/MinimumArray<Item>"
+        },
+        "payments": {
+          "$ref": "#/definitions/MinimumArray<Payment>"
+        },
+        "total": {
+          "type": "number"
+        }
+      },
+      "required": ["items", "payments"],
+      "additionalProperties": false
+    },
+    "MinimumArray<Item>": {
+      "type": "array",
+      "minItems": 1,
+      "items": [
+        {
+          "$ref": "#/definitions/Item"
+        }
+      ],
+      "additionalItems": {
+        "$ref": "#/definitions/Item"
+      }
+    },
+    "Item": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["position"]
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        },
+        "quantity": {
+          "type": "number"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "infoDiscountSum": {
+          "type": "number"
+        },
+        "tax": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "$ref": "#/definitions/PositionTax"
+            },
+            "sum": {
+              "type": "number"
+            }
+          },
+          "required": ["type"],
+          "additionalProperties": false
+        },
+        "paymentMethod": {
+          "type": "string",
+          "enum": [
+            "fullPrepayment",
+            "prepayment",
+            "advance",
+            "fullPayment",
+            "partialPayment",
+            "credit",
+            "creditPayment"
+          ]
+        },
+        "paymentObject": {
+          "type": "string",
+          "enum": ["commodity", "excise", "job", "service"]
+        },
+        "department": {
+          "type": "number"
+        },
+        "markingCode": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["other", "egais20", "egais30"]
+            },
+            "mark": {
+              "type": "string"
+            }
+          },
+          "required": ["mark"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "price",
+        "quantity",
+        "amount",
+        "tax",
+        "markingCode"
+      ],
+      "additionalProperties": false
+    },
+    "PositionTax": {
+      "type": "string",
+      "enum": [
+        "none",
+        "vat0",
+        "vat10",
+        "vat110",
+        "vat18",
+        "vat118",
+        "vat20",
+        "vat120"
+      ]
+    },
+    "MinimumArray<Payment>": {
+      "type": "array",
+      "minItems": 1,
+      "items": [
+        {
+          "$ref": "#/definitions/Payment"
+        }
+      ],
+      "additionalItems": {
+        "$ref": "#/definitions/Payment"
+      }
+    },
+    "Payment": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": ["string", "number"],
+          "enum": [
+            "cash",
+            0,
+            "electronicaly",
+            1,
+            "prepaid",
+            2,
+            "credir",
+            3,
+            "other",
+            4
+          ]
+        },
+        "sum": {
+          "type": "number"
+        }
+      },
+      "required": ["type", "sum"],
+      "additionalProperties": false
+    }
+  }
+}
