@@ -11,6 +11,7 @@ import {
   AtolDriverInterface,
   Sell,
   SellRequest,
+  LegacyCallback,
 } from './types';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
@@ -56,7 +57,7 @@ export default (
   const post = <T = unknown>(
     uuid: string,
     request: T,
-  ): AxiosPromise<TaskResponce> => {
+  ): Promise<AxiosPromise<TaskResponce>> => {
     return API.post('/api/v2/request', { uuid, request });
   };
 
@@ -92,7 +93,7 @@ export default (
   /*
    * Закрытие смены
    */
-  const closeShift = (): AxiosPromise<TaskResponce> => {
+  const closeShift = (): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
     return post(uuid, [
       {
@@ -105,7 +106,7 @@ export default (
   /*
    * X-отчет
    */
-  const reportX = (): AxiosPromise<TaskResponce> => {
+  const reportX = (): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
     return post(uuid, [
       {
@@ -118,7 +119,7 @@ export default (
   /*
    * Внесение наличных
    */
-  const cashIn = (cashSum: number): AxiosPromise<TaskResponce> => {
+  const cashIn = (cashSum: number): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
     return post(uuid, [
       {
@@ -132,7 +133,7 @@ export default (
   /*
    * Выплата наличных
    */
-  const cashOut = (cashSum: number): AxiosPromise<TaskResponce> => {
+  const cashOut = (cashSum: number): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
     return post(uuid, [
       {
@@ -146,7 +147,7 @@ export default (
   /*
    * Чек прихода – продажа
    */
-  const sell = (data: Sell): AxiosPromise<TaskResponce> => {
+  const sell = (data: Sell): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
     return post<SellRequest[]>(uuid, [
       {
@@ -193,5 +194,35 @@ export default (
     }
   };
 
-  return { openShift, closeShift, cashIn, cashOut, sell, reportX, checkStatus };
+  // Легаси
+  const fprint = {
+    report: async function (cb: LegacyCallback) {
+      try {
+        const {
+          data: { uuid },
+        } = await reportX();
+        if (!uuid) {
+          throw new Error('UUID cant be null | undefined!');
+        }
+        const status = await checkStatus(uuid);
+        return cb(true, { status });
+      } catch (error) {
+        const {
+          error: { code, description },
+        } = error.response.data;
+        return cb(false, { code, res: description });
+      }
+    },
+  };
+
+  return {
+    openShift,
+    closeShift,
+    cashIn,
+    cashOut,
+    sell,
+    reportX,
+    checkStatus,
+    fprint,
+  };
 };

@@ -8,14 +8,16 @@ declare global {
   }
 }
 
-export type TaskResponce =
-  | { uuid: string; number: number; isBlocked: boolean; blockedUUID: string }
-  | {
-      error: {
-        code: number;
-        description: string;
-      };
-    };
+export type TaskResponce = Partial<{
+  uuid: string;
+  number: number;
+  isBlocked: boolean;
+  blockedUUID: string;
+  error: {
+    code: number;
+    description: string;
+  };
+}>;
 
 export enum TaskResultStatus {
   ready = 'ready',
@@ -105,10 +107,15 @@ export type Item = {
 export type Payment = {
   type:
     | 'cash' // наличными
+    | 0
     | 'electronicaly' // безналичными
+    | 1
     | 'prepaid' // предварительная оплата (аванс)
+    | 2
     | 'credir' // последующая оплата (кредит)
-    | 'other'; // иная форма оплаты (встречное предоставление)
+    | 3
+    | 'other' // иная форма оплаты (встречное предоставление)
+    | 4;
   sum: number;
 };
 
@@ -123,12 +130,15 @@ export type Sell = {
 
 export type SellRequest = { type: RequestTypes } & Session & Sell;
 
+export type LegacyCallback = (success: boolean, data: any) => void;
+
 export type AtolDriverInterface = {
   openShift: () => Promise<AxiosPromise<TaskResponce>>;
-  closeShift: () => AxiosPromise<TaskResponce>;
-  cashIn: (sum: number) => AxiosPromise<TaskResponce>;
-  cashOut: (sum: number) => AxiosPromise<TaskResponce>;
-  sell: (data: Sell) => AxiosPromise<TaskResponce>;
-  reportX: () => AxiosPromise<TaskResponce>;
+  closeShift: () => Promise<AxiosPromise<TaskResponce>>;
+  cashIn: (sum: number) => Promise<AxiosPromise<TaskResponce>>;
+  cashOut: (sum: number) => Promise<AxiosPromise<TaskResponce>>;
+  sell: (data: Sell) => Promise<AxiosPromise<TaskResponce>>;
+  reportX: () => Promise<AxiosPromise<TaskResponce>>;
   checkStatus: (uuid: string, callIndex?: number) => Promise<TaskResultStatus>;
+  fprint: any;
 };

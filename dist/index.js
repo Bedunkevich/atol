@@ -466,7 +466,45 @@ var API = (function (session, baseURL) {
             });
         });
     };
-    return { openShift: openShift, closeShift: closeShift, cashIn: cashIn, cashOut: cashOut, sell: sell, reportX: reportX, checkStatus: checkStatus };
+    // Легаси
+    var fprint = {
+        report: function (cb) {
+            return __awaiter(this, void 0, void 0, function () {
+                var uuid, responce, error_3, _a, code, description;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 3, , 4]);
+                            return [4 /*yield*/, reportX()];
+                        case 1:
+                            uuid = (_b.sent()).data.uuid;
+                            if (!uuid) {
+                                throw new Error('UUID cant be null | undefined!');
+                            }
+                            return [4 /*yield*/, checkStatus(uuid)];
+                        case 2:
+                            responce = _b.sent();
+                            return [2 /*return*/, cb(true, responce)];
+                        case 3:
+                            error_3 = _b.sent();
+                            _a = error_3.response.data.error, code = _a.code, description = _a.description;
+                            return [2 /*return*/, cb(false, { code: code, res: description })];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        },
+    };
+    return {
+        openShift: openShift,
+        closeShift: closeShift,
+        cashIn: cashIn,
+        cashOut: cashOut,
+        sell: sell,
+        reportX: reportX,
+        checkStatus: checkStatus,
+        fprint: fprint,
+    };
 });
 
 var init = function (_a) {

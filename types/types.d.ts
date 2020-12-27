@@ -6,17 +6,16 @@ declare global {
         };
     }
 }
-export declare type TaskResponce = {
+export declare type TaskResponce = Partial<{
     uuid: string;
     number: number;
     isBlocked: boolean;
     blockedUUID: string;
-} | {
     error: {
         code: number;
         description: string;
     };
-};
+}>;
 export declare enum TaskResultStatus {
     ready = "ready",
     error = "error",
@@ -75,7 +74,7 @@ export declare type Item = {
     };
 };
 export declare type Payment = {
-    type: 'cash' | 'electronicaly' | 'prepaid' | 'credir' | 'other';
+    type: 'cash' | 0 | 'electronicaly' | 1 | 'prepaid' | 2 | 'credir' | 3 | 'other' | 4;
     sum: number;
 };
 export declare type MinimumArray<T> = [T, ...T[]];
@@ -87,13 +86,15 @@ export declare type Sell = {
 export declare type SellRequest = {
     type: RequestTypes;
 } & Session & Sell;
+export declare type LegacyCallback = (success: boolean, data: any) => void;
 export declare type AtolDriverInterface = {
     openShift: () => Promise<AxiosPromise<TaskResponce>>;
-    closeShift: () => AxiosPromise<TaskResponce>;
-    cashIn: (sum: number) => AxiosPromise<TaskResponce>;
-    cashOut: (sum: number) => AxiosPromise<TaskResponce>;
-    sell: (data: Sell) => AxiosPromise<TaskResponce>;
-    reportX: () => AxiosPromise<TaskResponce>;
+    closeShift: () => Promise<AxiosPromise<TaskResponce>>;
+    cashIn: (sum: number) => Promise<AxiosPromise<TaskResponce>>;
+    cashOut: (sum: number) => Promise<AxiosPromise<TaskResponce>>;
+    sell: (data: Sell) => Promise<AxiosPromise<TaskResponce>>;
+    reportX: () => Promise<AxiosPromise<TaskResponce>>;
     checkStatus: (uuid: string, callIndex?: number) => Promise<TaskResultStatus>;
+    fprint: any;
 };
 //# sourceMappingURL=types.d.ts.map
