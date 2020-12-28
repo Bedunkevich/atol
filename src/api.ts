@@ -64,11 +64,11 @@ export default (
     uuid: string,
     request: T,
   ): Promise<AxiosPromise<TaskResponce>> => {
-    return API.post('/api/v2/request', { uuid, request });
+    return API.post('/api/v2/requests', { uuid, request });
   };
 
   const get = (uuid: string): AxiosPromise<TaskResultResponce> => {
-    return API.get(`/api/v2/request/${uuid}`);
+    return API.get(`/api/v2/requests/${uuid}`);
   };
 
   /*

@@ -17,7 +17,7 @@ describe('ATOL', () => {
   });
   it('openShift | success', async () => {
     nock(BASE_URL)
-      .post('/api/v2/request', {
+      .post('/api/v2/requests', {
         uuid: FAKE_UUID,
         request: [
           {
@@ -42,7 +42,7 @@ describe('ATOL', () => {
   });
   it('openShift | fail (401)', async () => {
     nock(BASE_URL)
-      .post('/api/v2/request', {
+      .post('/api/v2/requests', {
         uuid: FAKE_UUID,
         request: [
           {
@@ -68,7 +68,7 @@ describe('ATOL', () => {
   });
   it('openShift | get task status success', async () => {
     nock(BASE_URL)
-      .get(`/api/v2/request/${FAKE_UUID}`)
+      .get(`/api/v2/requests/${FAKE_UUID}`)
       .reply(201, {
         results: [
           {
@@ -81,7 +81,7 @@ describe('ATOL', () => {
         ],
       });
     nock(BASE_URL)
-      .get(`/api/v2/request/${FAKE_UUID}`)
+      .get(`/api/v2/requests/${FAKE_UUID}`)
       .reply(201, {
         results: [
           {
@@ -94,7 +94,7 @@ describe('ATOL', () => {
         ],
       });
     nock(BASE_URL)
-      .get(`/api/v2/request/${FAKE_UUID}`)
+      .get(`/api/v2/requests/${FAKE_UUID}`)
       .reply(201, {
         results: [
           {

@@ -53,7 +53,7 @@ describe('ATOL', () => {
   });
   it('sell | success', async () => {
     nock(BASE_URL)
-      .post('/api/v2/request', {
+      .post('/api/v2/requests', {
         uuid: FAKE_UUID,
         request: [request],
       })

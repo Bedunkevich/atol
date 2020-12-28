@@ -62,7 +62,7 @@
 
 Ƭ  **AtolDriverInterface**: { cashIn: (sum: number) => Promise<AxiosPromise<[TaskResponce](README.md#taskresponce)\>\> ; cashOut: (sum: number) => Promise<AxiosPromise<[TaskResponce](README.md#taskresponce)\>\> ; checkStatus: (uuid: string, callIndex?: undefined \| number) => Promise<[TaskResultStatus](enums/taskresultstatus.md)\> ; closeShift: () => Promise<AxiosPromise<[TaskResponce](README.md#taskresponce)\>\> ; fprint: any ; openShift: () => Promise<AxiosPromise<[TaskResponce](README.md#taskresponce)\>\> ; reportX: () => Promise<AxiosPromise<[TaskResponce](README.md#taskresponce)\>\> ; sell: (data: [Sell](README.md#sell)) => Promise<AxiosPromise<[TaskResponce](README.md#taskresponce)\>\>  }
 
-*Defined in [types.ts:136](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L136)*
+*Defined in [types.ts:136](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L136)*
 
 #### Type declaration:
 
@@ -83,7 +83,7 @@ ___
 
 Ƭ  **Item**: { amount: number ; department?: undefined \| number ; infoDiscountSum?: undefined \| number ; markingCode: { mark: string ; type?: \"other\" \| \"egais20\" \| \"egais30\"  } ; name: string ; paymentMethod?: \"fullPrepayment\" \| \"prepayment\" \| \"advance\" \| \"fullPayment\" \| \"partialPayment\" \| \"credit\" \| \"creditPayment\" ; paymentObject?: \"commodity\" \| \"excise\" \| \"job\" \| \"service\" ; price: number ; quantity: number ; tax: { sum?: undefined \| number ; type: [PositionTax](README.md#positiontax)  } ; type: \"position\"  }
 
-*Defined in [types.ts:80](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L80)*
+*Defined in [types.ts:80](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L80)*
 
 #### Type declaration:
 
@@ -107,7 +107,7 @@ ___
 
 Ƭ  **LegacyCallback**: (success: boolean, data: any) => void
 
-*Defined in [types.ts:134](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L134)*
+*Defined in [types.ts:134](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L134)*
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 Ƭ  **LegacySell**: *typeof* sellMock
 
-*Defined in [mapping.ts:4](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/mapping.ts#L4)*
+*Defined in [mapping.ts:4](https://github.com/Bedunkevich/atol/blob/08e48ed/src/mapping.ts#L4)*
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 Ƭ  **MinimumArray**<T\>: [T]
 
-*Defined in [types.ts:123](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L123)*
+*Defined in [types.ts:123](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L123)*
 
 #### Type parameters:
 
@@ -137,7 +137,7 @@ ___
 
 Ƭ  **Payment**: { sum: number ; type: \"cash\" \| 0 \| \"electronicaly\" \| 1 \| \"prepaid\" \| 2 \| \"credir\" \| 3 \| \"other\" \| 4 \| number  }
 
-*Defined in [types.ts:107](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L107)*
+*Defined in [types.ts:107](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L107)*
 
 #### Type declaration:
 
@@ -152,7 +152,7 @@ ___
 
 Ƭ  **PositionTax**: \"none\" \| \"vat0\" \| \"vat10\" \| \"vat110\" \| \"vat18\" \| \"vat118\" \| \"vat20\" \| \"vat120\"
 
-*Defined in [types.ts:70](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L70)*
+*Defined in [types.ts:70](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L70)*
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 Ƭ  **Sell**: { items: [MinimumArray](README.md#minimumarray)<[Item](README.md#item)\> ; payments: [MinimumArray](README.md#minimumarray)<[Payment](README.md#payment)\> ; total?: undefined \| number  }
 
-*Defined in [types.ts:125](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L125)*
+*Defined in [types.ts:125](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L125)*
 
 #### Type declaration:
 
@@ -176,7 +176,7 @@ ___
 
 Ƭ  **SellRequest**: { type: [RequestTypes](enums/requesttypes.md)  } & [Session](README.md#session) & [Sell](README.md#sell)
 
-*Defined in [types.ts:132](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L132)*
+*Defined in [types.ts:132](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L132)*
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 Ƭ  **Session**: { operator: { name: string ; vatin?: undefined \| string  } ; taxationType: [TaxationType](README.md#taxationtype)  }
 
-*Defined in [types.ts:62](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L62)*
+*Defined in [types.ts:62](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L62)*
 
 #### Type declaration:
 
@@ -199,7 +199,7 @@ ___
 
 Ƭ  **TaskResponce**: Partial<{ blockedUUID: string ; error: { code: number ; description: string  } ; isBlocked: boolean ; number: number ; uuid: string  }\>
 
-*Defined in [types.ts:11](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L11)*
+*Defined in [types.ts:11](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L11)*
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 Ƭ  **TaskResultResponce**: { results: { error: { code: number ; description: string  } ; status: [TaskResultStatus](enums/taskresultstatus.md)  }[]  }
 
-*Defined in [types.ts:52](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L52)*
+*Defined in [types.ts:52](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L52)*
 
 #### Type declaration:
 
@@ -221,7 +221,7 @@ ___
 
 Ƭ  **TaxationType**: \"osn\" \| \"usnIncome\" \| \"usnIncomeOutcome\" \| \"envd\" \| \"esn\" \| \"patent\"
 
-*Defined in [types.ts:44](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/types.ts#L44)*
+*Defined in [types.ts:44](https://github.com/Bedunkevich/atol/blob/08e48ed/src/types.ts#L44)*
 
 ## Variables
 
@@ -229,7 +229,7 @@ ___
 
 • `Const` **DEFAULT\_BASE\_URL**: \"http://127.0.0.1:16732\" = "http://127.0.0.1:16732"
 
-*Defined in [api.ts:19](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/api.ts#L19)*
+*Defined in [api.ts:19](https://github.com/Bedunkevich/atol/blob/08e48ed/src/api.ts#L19)*
 
 ___
 
@@ -237,7 +237,7 @@ ___
 
 • `Const` **DELAY\_BETWEEN\_CALLS**: 1000 = 1000
 
-*Defined in [api.ts:21](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/api.ts#L21)*
+*Defined in [api.ts:21](https://github.com/Bedunkevich/atol/blob/08e48ed/src/api.ts#L21)*
 
 ___
 
@@ -245,7 +245,7 @@ ___
 
 • `Const` **MAX\_CALLS**: 3 = 3
 
-*Defined in [api.ts:20](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/api.ts#L20)*
+*Defined in [api.ts:20](https://github.com/Bedunkevich/atol/blob/08e48ed/src/api.ts#L20)*
 
 ___
 
@@ -253,7 +253,7 @@ ___
 
 • `Let` **\_clockseq**: unknown
 
-*Defined in [uuid/index.ts:10](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/index.ts#L10)*
+*Defined in [uuid/index.ts:10](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/index.ts#L10)*
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 • `Let` **\_lastMSecs**: number = 0
 
-*Defined in [uuid/index.ts:13](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/index.ts#L13)*
+*Defined in [uuid/index.ts:13](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/index.ts#L13)*
 
 ___
 
@@ -269,7 +269,7 @@ ___
 
 • `Let` **\_lastNSecs**: number = 0
 
-*Defined in [uuid/index.ts:14](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/index.ts#L14)*
+*Defined in [uuid/index.ts:14](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/index.ts#L14)*
 
 ___
 
@@ -277,7 +277,7 @@ ___
 
 • `Let` **\_nodeId**: unknown
 
-*Defined in [uuid/index.ts:9](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/index.ts#L9)*
+*Defined in [uuid/index.ts:9](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/index.ts#L9)*
 
 ___
 
@@ -285,7 +285,7 @@ ___
 
 • `Let` **ajv**: any
 
-*Defined in [api.ts:23](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/api.ts#L23)*
+*Defined in [api.ts:23](https://github.com/Bedunkevich/atol/blob/08e48ed/src/api.ts#L23)*
 
 ___
 
@@ -293,7 +293,7 @@ ___
 
 • `Const` **byteToHex**: any = []
 
-*Defined in [uuid/stringify.ts:7](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/stringify.ts#L7)*
+*Defined in [uuid/stringify.ts:7](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/stringify.ts#L7)*
 
 Convert array of 16 byte values to UUID string format of the form:
 XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -304,7 +304,7 @@ ___
 
 • `Let` **poolPtr**: number = rnds8Pool.length
 
-*Defined in [uuid/rng.ts:2](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/rng.ts#L2)*
+*Defined in [uuid/rng.ts:2](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/rng.ts#L2)*
 
 ___
 
@@ -312,7 +312,7 @@ ___
 
 • `Const` **rnds8Pool**: Uint8Array = new Uint8Array(256)
 
-*Defined in [uuid/rng.ts:1](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/rng.ts#L1)*
+*Defined in [uuid/rng.ts:1](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/rng.ts#L1)*
 
 ## Functions
 
@@ -320,7 +320,7 @@ ___
 
 ▸ `Const`**delay**(`time`: number): Promise<void\>
 
-*Defined in [helpers.ts:1](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/helpers.ts#L1)*
+*Defined in [helpers.ts:1](https://github.com/Bedunkevich/atol/blob/08e48ed/src/helpers.ts#L1)*
 
 #### Parameters:
 
@@ -336,7 +336,7 @@ ___
 
 ▸ `Const`**init**(`__namedParameters`: { baseUrl: string ; session: [Session](README.md#session)  }): [AtolDriverInterface](README.md#atoldriverinterface)
 
-*Defined in [index.ts:4](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/index.ts#L4)*
+*Defined in [index.ts:4](https://github.com/Bedunkevich/atol/blob/08e48ed/src/index.ts#L4)*
 
 #### Parameters:
 
@@ -352,7 +352,7 @@ ___
 
 ▸ `Const`**legacyMapSell**(`data`: [LegacySell](README.md#legacysell)): object
 
-*Defined in [mapping.ts:6](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/mapping.ts#L6)*
+*Defined in [mapping.ts:6](https://github.com/Bedunkevich/atol/blob/08e48ed/src/mapping.ts#L6)*
 
 #### Parameters:
 
@@ -373,7 +373,7 @@ ___
 
 ▸ **rng**(): Uint8Array
 
-*Defined in [uuid/rng.ts:4](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/rng.ts#L4)*
+*Defined in [uuid/rng.ts:4](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/rng.ts#L4)*
 
 **Returns:** Uint8Array
 
@@ -383,7 +383,7 @@ ___
 
 ▸ **stringify**(`arr`: any, `offset?`: number): string
 
-*Defined in [uuid/stringify.ts:13](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/stringify.ts#L13)*
+*Defined in [uuid/stringify.ts:13](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/stringify.ts#L13)*
 
 #### Parameters:
 
@@ -400,7 +400,7 @@ ___
 
 ▸ **v1**(`options?`: any, `buf?`: any, `offset?`: any): any
 
-*Defined in [uuid/index.ts:17](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/index.ts#L17)*
+*Defined in [uuid/index.ts:17](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/index.ts#L17)*
 
 #### Parameters:
 
@@ -418,7 +418,7 @@ ___
 
 ▸ **validate**(`uuid`: string): boolean
 
-*Defined in [uuid/validate.ts:3](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/uuid/validate.ts#L3)*
+*Defined in [uuid/validate.ts:3](https://github.com/Bedunkevich/atol/blob/08e48ed/src/uuid/validate.ts#L3)*
 
 #### Parameters:
 
@@ -434,7 +434,7 @@ ___
 
 ▸ `Const`**validateData**(`schema`: any, `data`: any): void
 
-*Defined in [api.ts:35](https://github.com/Bedunkevich/atol/blob/c3cd58d/src/api.ts#L35)*
+*Defined in [api.ts:35](https://github.com/Bedunkevich/atol/blob/08e48ed/src/api.ts#L35)*
 
 #### Parameters:
 

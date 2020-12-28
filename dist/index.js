@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.4
+ * @bedunkevich/atol v0.1.5
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -544,10 +544,10 @@ var API = (function (session, baseURL) {
     var operator = session.operator, taxationType = session.taxationType;
     validateData(SessionSchema, session);
     var post = function (uuid, request) {
-        return API.post('/api/v2/request', { uuid: uuid, request: request });
+        return API.post('/api/v2/requests', { uuid: uuid, request: request });
     };
     var get = function (uuid) {
-        return API.get("/api/v2/request/" + uuid);
+        return API.get("/api/v2/requests/" + uuid);
     };
     /*
      * Открытие смены
