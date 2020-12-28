@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.6
+ * @bedunkevich/atol v0.1.7
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -526,7 +526,6 @@ var validateData = function (schema, data) {
 };
 var API = (function (session, options) {
     var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 5, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls;
-    console.log({ baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls });
     var API = axios.create({
         baseURL: baseUrl,
         timeout: 1000,
@@ -732,26 +731,12 @@ var API = (function (session, options) {
         },
         ret: function (data, cb) {
             return __awaiter(this, void 0, void 0, function () {
-                var uuid, status_3, error_4, _a, code, description;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            _b.trys.push([0, 3, , 4]);
-                            return [4 /*yield*/, sell(legacyMapSell(data), RequestTypes.sellReturn)];
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data), RequestTypes.sellReturn); }, cb)];
                         case 1:
-                            uuid = (_b.sent()).data.uuid;
-                            if (!uuid) {
-                                throw new Error('UUID cant be null | undefined!');
-                            }
-                            return [4 /*yield*/, checkStatus(uuid)];
-                        case 2:
-                            status_3 = _b.sent();
-                            return [2 /*return*/, cb(false, { status: status_3, code: 100, res: 'Fake error' })];
-                        case 3:
-                            error_4 = _b.sent();
-                            _a = error_4.response.data.error, code = _a.code, description = _a.description;
-                            return [2 /*return*/, cb(false, { code: code, res: description })];
-                        case 4: return [2 /*return*/];
+                            _a.sent();
+                            return [2 /*return*/];
                     }
                 });
             });

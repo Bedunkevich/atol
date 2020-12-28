@@ -52,7 +52,6 @@ export default (session: Session, options: Options): AtolDriverInterface => {
     ...options,
   };
 
-  console.log({ baseUrl, maxCalls, delayBetweenCalls });
   const API = axios.create({
     baseURL: baseUrl,
     timeout: 1000,
@@ -241,21 +240,10 @@ export default (session: Session, options: Options): AtolDriverInterface => {
       await executeTask(() => sell(legacyMapSell(data) as any), cb);
     },
     ret: async function (data: any, cb: LegacyCallback) {
-      try {
-        const {
-          data: { uuid },
-        } = await sell(legacyMapSell(data) as any, RequestTypes.sellReturn);
-        if (!uuid) {
-          throw new Error('UUID cant be null | undefined!');
-        }
-        const status = await checkStatus(uuid);
-        return cb(false, { status, code: 100, res: 'Fake error' });
-      } catch (error) {
-        const {
-          error: { code, description },
-        } = error.response.data;
-        return cb(false, { code, res: description });
-      }
+      await executeTask(
+        () => sell(legacyMapSell(data) as any, RequestTypes.sellReturn),
+        cb,
+      );
     },
     open_session: async function (cb: LegacyCallback) {
       await executeTask(() => openShift(), cb);
