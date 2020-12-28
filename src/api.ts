@@ -131,8 +131,8 @@ export default (
       {
         type: RequestTypes[RequestTypes.cashIn],
         operator,
+        cashSum,
       },
-      cashSum,
     ]);
   };
 
@@ -145,8 +145,8 @@ export default (
       {
         type: RequestTypes[RequestTypes.cashOut],
         operator,
+        cashSum,
       },
-      cashSum,
     ]);
   };
 
@@ -220,7 +220,8 @@ export default (
         throw new Error('UUID cant be null | undefined!');
       }
       const status = await checkStatus(uuid);
-      return cb(true, { status, code: 0 });
+      console.log('%c[ATOL] [executeTask]', 'color:green', { uuid, status });
+      return cb(true, { code: 0, res: 'ok' });
     } catch (error) {
       const {
         error: { code, description },

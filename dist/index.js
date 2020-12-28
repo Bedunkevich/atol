@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.3
+ * @bedunkevich/atol v0.1.4
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -613,8 +613,8 @@ var API = (function (session, baseURL) {
             {
                 type: RequestTypes[RequestTypes.cashIn],
                 operator: operator,
+                cashSum: cashSum,
             },
-            cashSum,
         ]);
     };
     /*
@@ -626,8 +626,8 @@ var API = (function (session, baseURL) {
             {
                 type: RequestTypes[RequestTypes.cashOut],
                 operator: operator,
+                cashSum: cashSum,
             },
-            cashSum,
         ]);
     };
     /*
@@ -704,7 +704,8 @@ var API = (function (session, baseURL) {
                     return [4 /*yield*/, checkStatus(uuid)];
                 case 3:
                     status_2 = _b.sent();
-                    return [2 /*return*/, cb(true, { status: status_2, code: 0 })];
+                    console.log('%c[ATOL] [executeTask]', 'color:green', { uuid: uuid, status: status_2 });
+                    return [2 /*return*/, cb(true, { code: 0, res: 'ok' })];
                 case 4:
                     error_3 = _b.sent();
                     _a = error_3.response.data.error, code = _a.code, description = _a.description;
