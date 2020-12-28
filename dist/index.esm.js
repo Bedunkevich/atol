@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.2
+ * @bedunkevich/atol v0.1.3
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -496,7 +496,7 @@ var legacyMapSell = function (data) {
             amount: item.total,
             tax: { type: 'none' },
             markingCode: {
-                mark: item.description,
+                mark: btoa(item.description),
             },
         }); }),
         payments: data.other_payments.map(function (payment) { return ({
@@ -625,11 +625,13 @@ var API = (function (session, baseURL) {
     /*
      * Чек прихода – продажа
      */
-    var sell = function (data) {
+    var sell = function (data, type) {
+        if (type === void 0) { type = RequestTypes.sell; }
         var uuid = v1();
+        console.log("%c[ATOL] [SELL] " + type, 'color:green', data);
         validateData(SellSchema, data);
         return post(uuid, [
-            __assign({ type: RequestTypes[RequestTypes.sell], taxationType: taxationType,
+            __assign({ type: RequestTypes[type], taxationType: taxationType,
                 operator: operator }, data),
         ]);
     };
@@ -674,42 +676,69 @@ var API = (function (session, baseURL) {
             });
         });
     };
+    var executeTask = function (fn, cb) { return __awaiter(void 0, void 0, void 0, function () {
+        var uuid, status_2, error_3, _a, code, description;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    if (typeof cb !== 'function') {
+                        throw new Error('CALLBACK should be a function!');
+                    }
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 4, , 5]);
+                    return [4 /*yield*/, fn()];
+                case 2:
+                    uuid = (_b.sent()).data.uuid;
+                    if (!uuid) {
+                        throw new Error('UUID cant be null | undefined!');
+                    }
+                    return [4 /*yield*/, checkStatus(uuid)];
+                case 3:
+                    status_2 = _b.sent();
+                    return [2 /*return*/, cb(true, { status: status_2, code: 0 })];
+                case 4:
+                    error_3 = _b.sent();
+                    _a = error_3.response.data.error, code = _a.code, description = _a.description;
+                    return [2 /*return*/, cb(false, { code: code, res: description })];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); };
     // Легаси
     var fprint = {
         report: function (cb) {
             return __awaiter(this, void 0, void 0, function () {
-                var uuid, status_2, error_3, _a, code, description;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            _b.trys.push([0, 3, , 4]);
-                            return [4 /*yield*/, reportX()];
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, executeTask(function () { return reportX(); }, cb)];
                         case 1:
-                            uuid = (_b.sent()).data.uuid;
-                            if (!uuid) {
-                                throw new Error('UUID cant be null | undefined!');
-                            }
-                            return [4 /*yield*/, checkStatus(uuid)];
-                        case 2:
-                            status_2 = _b.sent();
-                            return [2 /*return*/, cb(true, { status: status_2, code: 0 })];
-                        case 3:
-                            error_3 = _b.sent();
-                            _a = error_3.response.data.error, code = _a.code, description = _a.description;
-                            return [2 /*return*/, cb(false, { code: code, res: description })];
-                        case 4: return [2 /*return*/];
+                            _a.sent();
+                            return [2 /*return*/];
                     }
                 });
             });
         },
         sell: function (data, cb) {
             return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data)); }, cb)];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        },
+        ret: function (data, cb) {
+            return __awaiter(this, void 0, void 0, function () {
                 var uuid, status_3, error_4, _a, code, description;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
                             _b.trys.push([0, 3, , 4]);
-                            return [4 /*yield*/, sell(legacyMapSell(data))];
+                            return [4 /*yield*/, sell(legacyMapSell(data), RequestTypes.sellReturn)];
                         case 1:
                             uuid = (_b.sent()).data.uuid;
                             if (!uuid) {
@@ -718,12 +747,53 @@ var API = (function (session, baseURL) {
                             return [4 /*yield*/, checkStatus(uuid)];
                         case 2:
                             status_3 = _b.sent();
-                            return [2 /*return*/, cb(true, { status: status_3, code: 0 })];
+                            return [2 /*return*/, cb(false, { status: status_3, code: 100, res: 'Fake error' })];
                         case 3:
                             error_4 = _b.sent();
                             _a = error_4.response.data.error, code = _a.code, description = _a.description;
                             return [2 /*return*/, cb(false, { code: code, res: description })];
                         case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        },
+        open_session: function (cb) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, executeTask(function () { return openShift(); }, cb)];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        },
+        close_session: function (cb) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, executeTask(function () { return closeShift(); }, cb)];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        },
+        cash_income: function (data, cb) {
+            return __awaiter(this, void 0, void 0, function () {
+                var fn;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            fn = data.income
+                                ? function () { return cashIn(data.summ); }
+                                : function () { return cashOut(data.summ); };
+                            return [4 /*yield*/, executeTask(fn, cb)];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
                     }
                 });
             });

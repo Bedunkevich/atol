@@ -20,7 +20,7 @@
 
 •  **ajv7**: { default: any  }
 
-*Defined in [types.ts:5](https://github.com/Bedunkevich/atol/blob/aa7f7ea/src/types.ts#L5)*
+*Defined in [types.ts:5](https://github.com/Bedunkevich/atol/blob/ad2217c/src/types.ts#L5)*
 
 #### Type declaration:
 

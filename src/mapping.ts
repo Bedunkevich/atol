@@ -14,7 +14,7 @@ export const legacyMapSell = (data: LegacySell) => {
         amount: item.total,
         tax: { type: 'none' },
         markingCode: {
-          mark: item.description,
+          mark: btoa(item.description),
         },
       }),
     ),

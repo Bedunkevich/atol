@@ -153,14 +153,19 @@ export default (
   /*
    * Чек прихода – продажа
    */
-  const sell = (data: Sell): Promise<AxiosPromise<TaskResponce>> => {
+  const sell = (
+    data: Sell,
+    type: RequestTypes = RequestTypes.sell,
+  ): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
+
+    console.log(`%c[ATOL] [SELL] ${type}`, 'color:green', data);
 
     validateData(SellSchema, data);
 
     return post<SellRequest[]>(uuid, [
       {
-        type: RequestTypes[RequestTypes.sell],
+        type: RequestTypes[type],
         taxationType,
         operator,
         ...data,
@@ -203,18 +208,45 @@ export default (
     }
   };
 
+  const executeTask = async (fn: any, cb: LegacyCallback) => {
+    if (typeof cb !== 'function') {
+      throw new Error('CALLBACK should be a function!');
+    }
+    try {
+      const {
+        data: { uuid },
+      } = await fn();
+      if (!uuid) {
+        throw new Error('UUID cant be null | undefined!');
+      }
+      const status = await checkStatus(uuid);
+      return cb(true, { status, code: 0 });
+    } catch (error) {
+      const {
+        error: { code, description },
+      } = error.response.data;
+      return cb(false, { code, res: description });
+    }
+  };
+
   // Легаси
   const fprint = {
     report: async function (cb: LegacyCallback) {
+      await executeTask(() => reportX(), cb);
+    },
+    sell: async function (data: any, cb: LegacyCallback) {
+      await executeTask(() => sell(legacyMapSell(data) as any), cb);
+    },
+    ret: async function (data: any, cb: LegacyCallback) {
       try {
         const {
           data: { uuid },
-        } = await reportX();
+        } = await sell(legacyMapSell(data) as any, RequestTypes.sellReturn);
         if (!uuid) {
           throw new Error('UUID cant be null | undefined!');
         }
         const status = await checkStatus(uuid);
-        return cb(true, { status, code: 0 });
+        return cb(false, { status, code: 100, res: 'Fake error' });
       } catch (error) {
         const {
           error: { code, description },
@@ -222,22 +254,20 @@ export default (
         return cb(false, { code, res: description });
       }
     },
-    sell: async function (data: any, cb: LegacyCallback) {
-      try {
-        const {
-          data: { uuid },
-        } = await sell(legacyMapSell(data) as any);
-        if (!uuid) {
-          throw new Error('UUID cant be null | undefined!');
-        }
-        const status = await checkStatus(uuid);
-        return cb(true, { status, code: 0 });
-      } catch (error) {
-        const {
-          error: { code, description },
-        } = error.response.data;
-        return cb(false, { code, res: description });
-      }
+    open_session: async function (cb: LegacyCallback) {
+      await executeTask(() => openShift(), cb);
+    },
+    close_session: async function (cb: LegacyCallback) {
+      await executeTask(() => closeShift(), cb);
+    },
+    cash_income: async function (
+      data: { income: boolean; summ: number },
+      cb: LegacyCallback,
+    ) {
+      const fn = data.income
+        ? () => cashIn(data.summ)
+        : () => cashOut(data.summ);
+      await executeTask(fn, cb);
     },
   };
 
