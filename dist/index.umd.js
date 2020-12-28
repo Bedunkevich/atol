@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.7
+ * @bedunkevich/atol v0.1.8
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */

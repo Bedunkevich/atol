@@ -28,7 +28,6 @@ This module has an UMD bundle available through JSDelivr and Unpkg CDNs.
 <script>
   (function () {
     const Ajv = window.ajv7.default;
-    const ajv = new Ajv();
   })();
 </script>
 <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
