@@ -5,6 +5,7 @@ import { v1 as buildUUID } from './uuid';
 import { delay } from './helpers';
 import {
   Session,
+  Options,
   TaskResponce,
   TaskResultResponce,
   TaskResultStatus,
@@ -15,10 +16,6 @@ import {
   LegacyCallback,
 } from './types';
 import { legacyMapSell } from './mapping';
-
-const DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
-const MAX_CALLS = 3;
-const DELAY_BETWEEN_CALLS = 1000;
 
 let ajv: any;
 
@@ -47,12 +44,17 @@ const validateData = (schema: any, data: any) => {
   }
 };
 
-export default (
-  session: Session,
-  baseURL: string = DEFAULT_BASE_URL,
-): AtolDriverInterface => {
+export default (session: Session, options: Options): AtolDriverInterface => {
+  const { baseUrl, maxCalls, delayBetweenCalls } = {
+    baseUrl: 'http://127.0.0.1:16732',
+    maxCalls: 5,
+    delayBetweenCalls: 2000,
+    ...options,
+  };
+
+  console.log({ baseUrl, maxCalls, delayBetweenCalls });
   const API = axios.create({
-    baseURL,
+    baseURL: baseUrl,
     timeout: 1000,
   });
 
@@ -187,23 +189,23 @@ export default (
       const status = results?.[0]?.status;
       console.log('%c[ATOL] [checkStatus]', 'color:green', results);
 
-      if (callIndex >= MAX_CALLS) {
+      if (callIndex >= maxCalls) {
         throw new Error('MAX_CALLS LIMIT!');
       }
 
       if (status !== TaskResultStatus['ready']) {
-        await delay(DELAY_BETWEEN_CALLS);
+        await delay(delayBetweenCalls);
         return checkStatus(uuid, callIndex + 1);
       }
       return status;
     } catch (error) {
       console.log('%c[ATOL] [checkStatus]', 'color:red', error.message);
 
-      if (callIndex >= MAX_CALLS) {
+      if (callIndex >= maxCalls) {
         throw new Error('MAX_CALLS LIMIT!');
       }
 
-      await delay(DELAY_BETWEEN_CALLS);
+      await delay(delayBetweenCalls);
       return checkStatus(uuid, callIndex + 1);
     }
   };

@@ -15,7 +15,7 @@ app.get('/lib', function (req, res) {
   res.sendFile(path.join(__dirname + '/dist/index.umd.js'));
 });
 
-app.get('/api/v2/request/:uuid', function (req, res) {
+app.get('/api/v2/requests/:uuid', function (req, res) {
   const { uuid } = req.params;
   res.status(200).send({
     results: [
@@ -31,7 +31,7 @@ app.get('/api/v2/request/:uuid', function (req, res) {
   });
 });
 
-app.post('/api/v2/request', function (req, res) {
+app.post('/api/v2/requests', function (req, res) {
   res.status(201).send({
     number: number++,
     uuid: '24efab70-4502-11eb-a6c8-1f6f568dbd0e',

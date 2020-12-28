@@ -1,6 +1,6 @@
-import type { Session, AtolDriverInterface } from './types';
-export declare const init: ({ session, baseUrl, }: {
+import type { Session, Options, AtolDriverInterface } from './types';
+export declare const init: ({ session, options, }: {
     session: Session;
-    baseUrl: string;
+    options?: Options;
 }) => AtolDriverInterface;
 //# sourceMappingURL=index.d.ts.map

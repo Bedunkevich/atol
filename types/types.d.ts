@@ -6,6 +6,11 @@ declare global {
         };
     }
 }
+export declare type Options = Partial<{
+    baseUrl: string;
+    maxCalls: number;
+    delayBetweenCalls: number;
+}> | undefined;
 export declare type TaskResponce = Partial<{
     uuid: string;
     number: number;

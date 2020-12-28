@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.5
+ * @bedunkevich/atol v0.1.6
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -514,9 +514,6 @@ var legacyMapSell = function (data) {
     };
 };
 
-var DEFAULT_BASE_URL = 'http://127.0.0.1:16732';
-var MAX_CALLS = 3;
-var DELAY_BETWEEN_CALLS = 1000;
 var ajv;
 if (window.ajv7) {
     var Ajv = window.ajv7.default;
@@ -535,10 +532,11 @@ var validateData = function (schema, data) {
         }
     }
 };
-var API = (function (session, baseURL) {
-    if (baseURL === void 0) { baseURL = DEFAULT_BASE_URL; }
+var API = (function (session, options) {
+    var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 5, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls;
+    console.log({ baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls });
     var API = axios__default['default'].create({
-        baseURL: baseURL,
+        baseURL: baseUrl,
         timeout: 1000,
     });
     var operator = session.operator, taxationType = session.taxationType;
@@ -660,11 +658,11 @@ var API = (function (session, baseURL) {
                         results = (_b.sent()).data.results;
                         status_1 = (_a = results === null || results === void 0 ? void 0 : results[0]) === null || _a === void 0 ? void 0 : _a.status;
                         console.log('%c[ATOL] [checkStatus]', 'color:green', results);
-                        if (callIndex >= MAX_CALLS) {
+                        if (callIndex >= maxCalls) {
                             throw new Error('MAX_CALLS LIMIT!');
                         }
                         if (!(status_1 !== TaskResultStatus['ready'])) return [3 /*break*/, 3];
-                        return [4 /*yield*/, delay(DELAY_BETWEEN_CALLS)];
+                        return [4 /*yield*/, delay(delayBetweenCalls)];
                     case 2:
                         _b.sent();
                         return [2 /*return*/, checkStatus(uuid, callIndex + 1)];
@@ -672,10 +670,10 @@ var API = (function (session, baseURL) {
                     case 4:
                         error_2 = _b.sent();
                         console.log('%c[ATOL] [checkStatus]', 'color:red', error_2.message);
-                        if (callIndex >= MAX_CALLS) {
+                        if (callIndex >= maxCalls) {
                             throw new Error('MAX_CALLS LIMIT!');
                         }
-                        return [4 /*yield*/, delay(DELAY_BETWEEN_CALLS)];
+                        return [4 /*yield*/, delay(delayBetweenCalls)];
                     case 5:
                         _b.sent();
                         return [2 /*return*/, checkStatus(uuid, callIndex + 1)];
@@ -821,8 +819,8 @@ var API = (function (session, baseURL) {
 });
 
 var init = function (_a) {
-    var session = _a.session, baseUrl = _a.baseUrl;
-    return API(session, baseUrl);
+    var session = _a.session, options = _a.options;
+    return API(session, options);
 };
 
 exports.init = init;
