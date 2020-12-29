@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.8
+ * @bedunkevich/atol v0.1.9
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -69,6 +69,97 @@ function __generator(thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 }
+
+var name = "@bedunkevich/atol";
+var version = "0.1.9";
+var description = "";
+var cdn = "dist/index.umd.js";
+var main = "dist/index.js";
+var types = "types/index.d.ts";
+var unpkg = "dist/index.umd.js";
+var module = "dist/index.esm.js";
+var jsdelivr = "dist/index.umd.js";
+var dependencies = {
+	ajv: "^7.0.2",
+	axios: "^0.21.1"
+};
+var devDependencies = {
+	"@rollup/plugin-commonjs": "^17.0.0",
+	"@rollup/plugin-json": "^4.1.0",
+	"@rollup/plugin-node-resolve": "^11.0.1",
+	"@types/jest": "^26.0.14",
+	"@types/node": "^14.14.16",
+	"@types/prettier": "^2.1.2",
+	"@types/uuid": "^8.3.0",
+	"@typescript-eslint/eslint-plugin": "^4.4.0",
+	"@typescript-eslint/parser": "^4.4.0",
+	cors: "^2.8.5",
+	eslint: "^7.11.0",
+	"eslint-config-prettier": "^6.12.0",
+	"eslint-plugin-prettier": "^3.1.4",
+	express: "^4.17.1",
+	jest: "^26.5.2",
+	nock: "^13.0.5",
+	nodemon: "^2.0.6",
+	prettier: "^2.1.2",
+	rollup: "^2.29.0",
+	"rollup-plugin-babel": "^4.4.0",
+	"rollup-plugin-node-polyfills": "^0.2.1",
+	"rollup-plugin-terser": "^7.0.2",
+	"rollup-plugin-typescript2": "^0.27.3",
+	"ts-jest": "^26.4.1",
+	typedoc: "^0.19.2",
+	"typedoc-plugin-markdown": "^3.0.8",
+	typescript: "^4.0.3"
+};
+var scripts = {
+	doc: "typedoc src/index.ts",
+	test: "yarn run test:lint && yarn run test:unit",
+	"test:lint": "eslint \"*/**/*.{ts,js,json}\"",
+	"test:unit": "jest",
+	lint: "eslint \"*/**/*.{ts,js,json}\" --fix",
+	build: "rollup --config ./rollup.config.js",
+	prepublishOnly: "yarn run doc && yarn run build && yarn run test",
+	server: "nodemon ./server.js"
+};
+var repository = {
+	type: "git",
+	url: "git+https://github.com/Bedunkevich/atol.git"
+};
+var keywords = [
+	"typescript",
+	"atol",
+	"library"
+];
+var author = {
+	name: "Stanislav Bedunkevich"
+};
+var license = "MIT";
+var bugs = {
+	url: "https://github.com/Bedunkevich/atol/issues"
+};
+var homepage = "https://github.com/Bedunkevich/atol#readme";
+var pkg = {
+	name: name,
+	version: version,
+	description: description,
+	cdn: cdn,
+	main: main,
+	types: types,
+	unpkg: unpkg,
+	module: module,
+	jsdelivr: jsdelivr,
+	"umd:main": "dist/index.umd.js",
+	dependencies: dependencies,
+	devDependencies: devDependencies,
+	scripts: scripts,
+	repository: repository,
+	keywords: keywords,
+	author: author,
+	license: license,
+	bugs: bugs,
+	homepage: homepage
+};
 
 var $schema = "http://json-schema.org/draft-07/schema#";
 var $ref = "#/definitions/Session";
@@ -500,7 +591,7 @@ var legacyMapSell = function (data) {
             },
         }); }),
         payments: data.other_payments.map(function (payment) { return ({
-            type: payment.id - 1,
+            type: (payment.id - 1).toString(),
             sum: payment.value,
         }); }),
     };
@@ -525,7 +616,8 @@ var validateData = function (schema, data) {
     }
 };
 var API = (function (session, options) {
-    var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 5, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls;
+    var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls;
+    console.log("%c[ATOL] @bedunkevich/atol version: " + pkg.version, 'color:green');
     var API = axios.create({
         baseURL: baseUrl,
         timeout: 1000,

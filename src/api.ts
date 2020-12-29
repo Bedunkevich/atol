@@ -1,4 +1,5 @@
 import axios, { AxiosPromise } from 'axios';
+import pkg from '../package.json';
 import SessionSchema from './validation/Session.json';
 import SellSchema from './validation/Sell.json';
 import { v1 as buildUUID } from './uuid';
@@ -47,10 +48,15 @@ const validateData = (schema: any, data: any) => {
 export default (session: Session, options: Options): AtolDriverInterface => {
   const { baseUrl, maxCalls, delayBetweenCalls } = {
     baseUrl: 'http://127.0.0.1:16732',
-    maxCalls: 5,
+    maxCalls: 7,
     delayBetweenCalls: 2000,
     ...options,
   };
+
+  console.log(
+    `%c[ATOL] @bedunkevich/atol version: ${pkg.version}`,
+    'color:green',
+  );
 
   const API = axios.create({
     baseURL: baseUrl,

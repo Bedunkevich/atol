@@ -20,7 +20,7 @@ export const legacyMapSell = (data: LegacySell) => {
     ),
     payments: data.other_payments.map(
       (payment): Payment => ({
-        type: payment.id - 1,
+        type: (payment.id - 1).toString(),
         sum: payment.value,
       }),
     ),
