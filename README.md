@@ -1,8 +1,8 @@
 # @bedunkevich/atol
 
 [![License](https://badgen.net/github/license/Bedunkevich/atol)](./LICENSE)
-[![Library minified size](https://badgen.net/bundlephobia/min/atol)](https://bundlephobia.com/result?p=@bedunkevich/atol)
-[![Library minified + gzipped size](https://badgen.net/bundlephobia/minzip/atol)](https://bundlephobia.com/result?p=@bedunkevich/atol)
+[![Library minified size](https://badgen.net/bundlephobia/min/@bedunkevich/atol)](https://bundlephobia.com/result?p=@bedunkevich/atol)
+[![Library minified + gzipped size](https://badgen.net/bundlephobia/minzip/@bedunkevich/atol)](https://bundlephobia.com/result?p=@bedunkevich/atol)
 
 ## Installation
 
