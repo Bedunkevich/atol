@@ -106,7 +106,7 @@ export type Item = {
     | 'creditPayment'; // оплата кредита
   paymentObject?: 'commodity' | 'excise' | 'job' | 'service'; // По умолчанию: commodity
   department?: number; // Отдел / секция. По умолчанию: 1
-  markingCode: {
+  markingCode?: {
     type?: 'other' | 'egais20' | 'egais30'; // Тип марки. По умолчанию: other
     mark: string; // base64-представление кода маркировки
   };

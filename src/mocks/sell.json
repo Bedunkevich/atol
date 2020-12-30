@@ -16,7 +16,7 @@
       "cost": 2705,
       "quantity": 1,
       "name": "ITEM1",
-      "description": "BASE64CODE="
+      "description": "+/%3F%20%3A/"
     },
     {
       "total": 495,
@@ -24,7 +24,7 @@
       "cost": 660,
       "quantity": 1,
       "name": "ITEM2",
-      "description": "BASE64CODE="
+      "description": ""
     }
   ],
   "topay": 2929.5,

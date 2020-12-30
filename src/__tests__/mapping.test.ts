@@ -10,6 +10,16 @@ describe('LEGACY', () => {
           { sum: 1000, type: '0' },
           { sum: 1929.5, type: '1' },
         ],
+        items: [
+          expect.objectContaining({
+            markingCode: {
+              mark: 'Ky8/IDov',
+            },
+          }),
+          expect.not.objectContaining({
+            markingCode: {},
+          }),
+        ],
       }),
     );
   });

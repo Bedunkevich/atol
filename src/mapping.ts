@@ -24,17 +24,27 @@ export const legacyMapSell = (
 
   return {
     items: data.products.map(
-      (item): Item => ({
-        type: 'position',
-        name: item.name,
-        price: item.cost,
-        quantity: item.quantity,
-        amount: item.total,
-        tax: { type: 'none' },
-        markingCode: {
-          mark: btoa(item.description),
-        },
-      }),
+      (item): Item =>
+        item.description
+          ? {
+              type: 'position',
+              name: item.name,
+              price: item.cost,
+              quantity: item.quantity,
+              amount: item.total,
+              tax: { type: 'none' },
+              markingCode: {
+                mark: btoa(unescape(item.description)),
+              },
+            }
+          : {
+              type: 'position',
+              name: item.name,
+              price: item.cost,
+              quantity: item.quantity,
+              amount: item.total,
+              tax: { type: 'none' },
+            },
     ),
     payments,
   };
