@@ -7,8 +7,8 @@ describe('LEGACY', () => {
     expect(responce).toMatchObject(
       expect.objectContaining({
         payments: [
-          { sum: 1000, type: 'cash' },
-          { sum: 1929.5, type: 'electronicaly' },
+          { sum: 1000, type: '0' },
+          { sum: 1929.5, type: '1' },
         ],
       }),
     );

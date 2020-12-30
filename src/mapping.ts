@@ -10,14 +10,14 @@ export const legacyMapSell = (
 
   if (data.payments.cash) {
     payments.push({
-      type: 'cash',
+      type: '0',
       sum: data.payments.cash,
     });
   }
 
   if (data.payments.card) {
     payments.push({
-      type: 'electronicaly',
+      type: '1',
       sum: data.payments.card,
     });
   }

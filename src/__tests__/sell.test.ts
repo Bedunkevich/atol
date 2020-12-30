@@ -34,7 +34,7 @@ const payments: MinimumArray<Payment> = [
     type: 'cash',
     sum: 2.5,
   },
-  { type: 'electronicaly', sum: 2.5 },
+  { type: '1', sum: 2.5 },
 ];
 
 const request: SellRequest = {
