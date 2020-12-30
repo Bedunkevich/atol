@@ -6,6 +6,22 @@ type LegacySell = typeof sellMock;
 export const legacyMapSell = (
   data: LegacySell,
 ): { items: Item[]; payments: Payment[] } => {
+  const payments: Payment[] = [];
+
+  if (data.payments.cash) {
+    payments.push({
+      type: 'cash',
+      sum: data.payments.cash,
+    });
+  }
+
+  if (data.payments.card) {
+    payments.push({
+      type: 'electronicaly',
+      sum: data.payments.card,
+    });
+  }
+
   return {
     items: data.products.map(
       (item): Item => ({
@@ -20,14 +36,6 @@ export const legacyMapSell = (
         },
       }),
     ),
-    payments: Object.keys(data.payments).reduce(
-      (acc: Payment[], key): Payment[] => {
-        return acc.concat({
-          type: key,
-          sum: data.payments[key as 'cash' | 'card'],
-        });
-      },
-      [],
-    ),
+    payments,
   };
 };

@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.10
+ * @bedunkevich/atol v0.1.11
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -79,7 +79,7 @@
     }
 
     var name = "@bedunkevich/atol";
-    var version = "0.1.10";
+    var version = "0.1.11";
     var description = "";
     var cdn = "dist/index.umd.js";
     var main = "dist/index.js";
@@ -586,6 +586,19 @@
     })(RequestTypes || (RequestTypes = {}));
 
     var legacyMapSell = function (data) {
+        var payments = [];
+        if (data.payments.cash) {
+            payments.push({
+                type: 'cash',
+                sum: data.payments.cash,
+            });
+        }
+        if (data.payments.card) {
+            payments.push({
+                type: 'electronicaly',
+                sum: data.payments.card,
+            });
+        }
         return {
             items: data.products.map(function (item) { return ({
                 type: 'position',
@@ -598,12 +611,7 @@
                     mark: btoa(item.description),
                 },
             }); }),
-            payments: Object.keys(data.payments).reduce(function (acc, key) {
-                return acc.concat({
-                    type: key,
-                    sum: data.payments[key],
-                });
-            }, []),
+            payments: payments,
         };
     };
 
@@ -823,7 +831,9 @@
                 return __awaiter(this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data)); }, cb)];
+                            case 0:
+                                console.log('%c[ATOL] [LEGACY]', 'color:green', data);
+                                return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data)); }, cb)];
                             case 1:
                                 _a.sent();
                                 return [2 /*return*/];

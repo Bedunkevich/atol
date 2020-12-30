@@ -243,6 +243,7 @@ export default (session: Session, options: Options): AtolDriverInterface => {
       await executeTask(() => reportX(), cb);
     },
     sell: async function (data: any, cb: LegacyCallback) {
+      console.log('%c[ATOL] [LEGACY]', 'color:green', data);
       await executeTask(() => sell(legacyMapSell(data) as any), cb);
     },
     ret: async function (data: any, cb: LegacyCallback) {
