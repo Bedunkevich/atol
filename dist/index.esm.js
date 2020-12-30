@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.9
+ * @bedunkevich/atol v0.1.10
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -71,7 +71,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.9";
+var version = "0.1.10";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -590,10 +590,12 @@ var legacyMapSell = function (data) {
                 mark: btoa(item.description),
             },
         }); }),
-        payments: data.other_payments.map(function (payment) { return ({
-            type: (payment.id - 1).toString(),
-            sum: payment.value,
-        }); }),
+        payments: Object.keys(data.payments).reduce(function (acc, key) {
+            return acc.concat({
+                type: key,
+                sum: data.payments[key],
+            });
+        }, []),
     };
 };
 

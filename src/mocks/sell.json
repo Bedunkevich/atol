@@ -15,7 +15,7 @@
       "discount": 10,
       "cost": 2705,
       "quantity": 1,
-      "name": "E182S16583401",
+      "name": "ITEM1",
       "description": "BASE64CODE="
     },
     {
@@ -23,11 +23,11 @@
       "discount": 25,
       "cost": 660,
       "quantity": 1,
-      "name": "NK_UFA",
+      "name": "ITEM2",
       "description": "BASE64CODE="
     }
   ],
   "topay": 2929.5,
   "total_price": 2929.5,
-  "user": "Администратор"
+  "user": "Username"
 }

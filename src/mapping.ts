@@ -3,7 +3,9 @@ import type { Item, Payment } from './types';
 
 type LegacySell = typeof sellMock;
 
-export const legacyMapSell = (data: LegacySell) => {
+export const legacyMapSell = (
+  data: LegacySell,
+): { items: Item[]; payments: Payment[] } => {
   return {
     items: data.products.map(
       (item): Item => ({
@@ -18,11 +20,14 @@ export const legacyMapSell = (data: LegacySell) => {
         },
       }),
     ),
-    payments: data.other_payments.map(
-      (payment): Payment => ({
-        type: (payment.id - 1).toString(),
-        sum: payment.value,
-      }),
+    payments: Object.keys(data.payments).reduce(
+      (acc: Payment[], key): Payment[] => {
+        return acc.concat({
+          type: key,
+          sum: data.payments[key as 'cash' | 'card'],
+        });
+      },
+      [],
     ),
   };
 };
