@@ -22,7 +22,11 @@ const SESSION: Session = {
 
 const Atol: AtolDriverInterface = init({
   session: SESSION,
-  baseUrl: BASE_URL,
+  options: {
+    baseUrl: BASE_URL,
+    maxCalls: 15,
+    maxCodeLength: 32,
+  },
 });
 
 export { Atol, nock, BASE_URL, SESSION };

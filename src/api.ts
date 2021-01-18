@@ -46,7 +46,7 @@ const validateData = (schema: any, data: any) => {
 };
 
 export default (session: Session, options: Options): AtolDriverInterface => {
-  const { baseUrl, maxCalls, delayBetweenCalls } = {
+  const { baseUrl, maxCalls, delayBetweenCalls, maxCodeLength } = {
     baseUrl: 'http://127.0.0.1:16732',
     maxCalls: 7,
     delayBetweenCalls: 2000,
@@ -56,6 +56,7 @@ export default (session: Session, options: Options): AtolDriverInterface => {
   console.log(
     `%c[ATOL] @bedunkevich/atol version: ${pkg.version}`,
     'color:green',
+    { baseUrl, maxCalls, delayBetweenCalls, maxCodeLength },
   );
 
   const API = axios.create({
@@ -230,6 +231,7 @@ export default (session: Session, options: Options): AtolDriverInterface => {
       console.log('%c[ATOL] [executeTask]', 'color:green', { uuid, status });
       return cb(true, { code: 0, res: 'ok' });
     } catch (error) {
+      console.log(error);
       const {
         error: { code, description },
       } = error.response.data;
@@ -244,11 +246,18 @@ export default (session: Session, options: Options): AtolDriverInterface => {
     },
     sell: async function (data: any, cb: LegacyCallback) {
       console.log('%c[ATOL] [LEGACY]', 'color:green', data);
-      await executeTask(() => sell(legacyMapSell(data) as any), cb);
+      await executeTask(
+        () => sell(legacyMapSell(data, maxCodeLength) as any),
+        cb,
+      );
     },
     ret: async function (data: any, cb: LegacyCallback) {
       await executeTask(
-        () => sell(legacyMapSell(data) as any, RequestTypes.sellReturn),
+        () =>
+          sell(
+            legacyMapSell(data, maxCodeLength) as any,
+            RequestTypes.sellReturn,
+          ),
         cb,
       );
     },

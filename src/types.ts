@@ -13,6 +13,7 @@ export type Options =
       baseUrl: string;
       maxCalls: number;
       delayBetweenCalls: number;
+      maxCodeLength: number;
     }>
   | undefined;
 

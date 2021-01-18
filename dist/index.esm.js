@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.13
+ * @bedunkevich/atol v0.1.14
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -71,7 +71,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.13";
+var version = "0.1.14";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -577,7 +577,7 @@ var RequestTypes;
     RequestTypes["reportX"] = "reportX";
 })(RequestTypes || (RequestTypes = {}));
 
-var legacyMapSell = function (data) {
+var legacyMapSell = function (data, maxCodeLength) {
     var payments = [];
     if (data.payments.cash) {
         payments.push({
@@ -602,7 +602,10 @@ var legacyMapSell = function (data) {
                     amount: item.total,
                     tax: { type: 'none' },
                     markingCode: {
-                        mark: btoa(unescape(item.description)),
+                        type: 'other',
+                        mark: btoa(maxCodeLength
+                            ? unescape(item.description).slice(0, maxCodeLength)
+                            : unescape(item.description)),
                     },
                 }
                 : {
@@ -637,8 +640,8 @@ var validateData = function (schema, data) {
     }
 };
 var API = (function (session, options) {
-    var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls;
-    console.log("%c[ATOL] @bedunkevich/atol version: " + pkg.version, 'color:green');
+    var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls, maxCodeLength = _a.maxCodeLength;
+    console.log("%c[ATOL] @bedunkevich/atol version: " + pkg.version, 'color:green', { baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls, maxCodeLength: maxCodeLength });
     var API = axios.create({
         baseURL: baseUrl,
         timeout: 1000,
@@ -810,6 +813,7 @@ var API = (function (session, options) {
                     return [2 /*return*/, cb(true, { code: 0, res: 'ok' })];
                 case 4:
                     error_3 = _b.sent();
+                    console.log(error_3);
                     _a = error_3.response.data.error, code = _a.code, description = _a.description;
                     return [2 /*return*/, cb(false, { code: code, res: description })];
                 case 5: return [2 /*return*/];
@@ -836,7 +840,7 @@ var API = (function (session, options) {
                     switch (_a.label) {
                         case 0:
                             console.log('%c[ATOL] [LEGACY]', 'color:green', data);
-                            return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data)); }, cb)];
+                            return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data, maxCodeLength)); }, cb)];
                         case 1:
                             _a.sent();
                             return [2 /*return*/];
@@ -848,7 +852,9 @@ var API = (function (session, options) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data), RequestTypes.sellReturn); }, cb)];
+                        case 0: return [4 /*yield*/, executeTask(function () {
+                                return sell(legacyMapSell(data, maxCodeLength), RequestTypes.sellReturn);
+                            }, cb)];
                         case 1:
                             _a.sent();
                             return [2 /*return*/];

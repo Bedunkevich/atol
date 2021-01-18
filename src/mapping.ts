@@ -5,6 +5,7 @@ type LegacySell = typeof sellMock;
 
 export const legacyMapSell = (
   data: LegacySell,
+  maxCodeLength?: number,
 ): { items: Item[]; payments: Payment[] } => {
   const payments: Payment[] = [];
 
@@ -34,7 +35,12 @@ export const legacyMapSell = (
               amount: item.total,
               tax: { type: 'none' },
               markingCode: {
-                mark: btoa(unescape(item.description)),
+                type: 'other',
+                mark: btoa(
+                  maxCodeLength
+                    ? unescape(item.description).slice(0, maxCodeLength)
+                    : unescape(item.description),
+                ),
               },
             }
           : {

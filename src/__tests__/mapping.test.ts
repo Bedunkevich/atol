@@ -13,6 +13,7 @@ describe('LEGACY', () => {
         items: [
           expect.objectContaining({
             markingCode: {
+              type: 'other',
               mark: 'Ky8/IDov',
             },
           }),

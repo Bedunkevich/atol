@@ -31,7 +31,7 @@ const items: MinimumArray<Item> = [
 ];
 const payments: MinimumArray<Payment> = [
   {
-    type: 'cash',
+    type: '0',
     sum: 2.5,
   },
   { type: '1', sum: 2.5 },
