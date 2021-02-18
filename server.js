@@ -25,7 +25,7 @@ app.get('/api/v2/requests/:uuid', function (req, res) {
           code: 0,
           description: 'Ошибок нет',
         },
-        status: 'inProgress', //ready
+        status: 'ready', // ready | inProgress
       },
     ],
   });

@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.14
+ * @bedunkevich/atol v0.1.15
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -79,7 +79,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.14";
+var version = "0.1.15";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -652,7 +652,7 @@ var API = (function (session, options) {
     console.log("%c[ATOL] @bedunkevich/atol version: " + pkg.version, 'color:green', { baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls, maxCodeLength: maxCodeLength });
     var API = axios__default['default'].create({
         baseURL: baseUrl,
-        timeout: 1000,
+        timeout: 20000,
     });
     var operator = session.operator, taxationType = session.taxationType;
     validateData(SessionSchema, session);

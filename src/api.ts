@@ -61,7 +61,7 @@ export default (session: Session, options: Options): AtolDriverInterface => {
 
   const API = axios.create({
     baseURL: baseUrl,
-    timeout: 1000,
+    timeout: 20000,
   });
 
   const { operator, taxationType } = session;
