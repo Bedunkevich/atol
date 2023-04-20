@@ -1,7 +1,7 @@
 import type sellMock from './mocks/sell.json';
 import type { Item, Payment } from './types';
-declare type LegacySell = typeof sellMock;
-export declare const legacyMapSell: (data: LegacySell, maxCodeLength?: number | undefined) => {
+type LegacySell = typeof sellMock;
+export declare const legacyMapSell: (data: LegacySell, maxCodeLength?: number) => {
     items: Item[];
     payments: Payment[];
 };

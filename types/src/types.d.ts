@@ -6,13 +6,13 @@ declare global {
         };
     }
 }
-export declare type Options = Partial<{
+export type Options = Partial<{
     baseUrl: string;
     maxCalls: number;
     delayBetweenCalls: number;
     maxCodeLength: number;
 }> | undefined;
-export declare type TaskResponce = Partial<{
+export type TaskResponce = Partial<{
     uuid: string;
     number: number;
     isBlocked: boolean;
@@ -42,8 +42,8 @@ export declare enum RequestTypes {
     buyReturn = "buyReturn",
     reportX = "reportX"
 }
-export declare type TaxationType = 'osn' | 'usnIncome' | 'usnIncomeOutcome' | 'envd' | 'esn' | 'patent';
-export declare type TaskResultResponce = {
+export type TaxationType = 'osn' | 'usnIncome' | 'usnIncomeOutcome' | 'envd' | 'esn' | 'patent';
+export type TaskResultResponce = {
     results: {
         error: {
             code: number;
@@ -52,21 +52,21 @@ export declare type TaskResultResponce = {
         status: TaskResultStatus;
     }[];
 };
-export declare type Session = {
+export type Session = {
     taxationType: TaxationType;
     operator: {
         name: string;
         vatin?: string;
     };
 };
-export declare type PositionTax = 'none' | 'vat0' | 'vat10' | 'vat110' | 'vat18' | 'vat118' | 'vat20' | 'vat120';
-export declare type Item = {
+export type PositionTax = 'none' | 'vat0' | 'vat10' | 'vat110' | 'vat18' | 'vat118' | 'vat20' | 'vat120';
+export type Item = {
     type: 'position';
     name: string;
     price: number;
     quantity: number;
     amount: number;
-    infoDiscountSum?: number;
+    infoDiscountAmount?: number;
     tax: {
         type: PositionTax;
         sum?: number;
@@ -79,21 +79,21 @@ export declare type Item = {
         mark: string;
     };
 };
-export declare type Payment = {
+export type Payment = {
     type: 'cash' | '0' | 'electronicaly' | '1' | 'prepaid' | '2' | 'credir' | '3' | 'other' | '4' | string;
     sum: number;
 };
-export declare type MinimumArray<T> = [T, ...T[]];
-export declare type Sell = {
+export type MinimumArray<T> = [T, ...T[]];
+export type Sell = {
     items: MinimumArray<Item>;
     payments: MinimumArray<Payment>;
     total?: number;
 };
-export declare type SellRequest = {
+export type SellRequest = {
     type: RequestTypes;
 } & Session & Sell;
-export declare type LegacyCallback = (success: boolean, data: any) => void;
-export declare type AtolDriverInterface = {
+export type LegacyCallback = (success: boolean, data: any) => void;
+export type AtolDriverInterface = {
     openShift: () => Promise<AxiosPromise<TaskResponce>>;
     closeShift: () => Promise<AxiosPromise<TaskResponce>>;
     cashIn: (sum: number) => Promise<AxiosPromise<TaskResponce>>;

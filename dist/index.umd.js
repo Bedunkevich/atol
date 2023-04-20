@@ -1,18 +1,19 @@
 /*!
- * @bedunkevich/atol v0.1.15
+ * @bedunkevich/atol v0.1.16
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('axios')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'axios'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.atol = {}, global.axios));
-}(this, (function (exports, axios) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('axios'), require('currency.js')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'axios', 'currency.js'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.atol = {}, global.axios, global.currency.js));
+})(this, (function (exports, axios, currency) { 'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
     var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
+    var currency__default = /*#__PURE__*/_interopDefaultLegacy(currency);
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -79,7 +80,7 @@
     }
 
     var name = "@bedunkevich/atol";
-    var version = "0.1.15";
+    var version = "0.1.16";
     var description = "";
     var cdn = "dist/index.umd.js";
     var main = "dist/index.js";
@@ -89,7 +90,8 @@
     var jsdelivr = "dist/index.umd.js";
     var dependencies = {
     	ajv: "^7.0.2",
-    	axios: "^0.21.1"
+    	axios: "^0.21.1",
+    	"currency.js": "^2.0.4"
     };
     var devDependencies = {
     	"@rollup/plugin-commonjs": "^17.0.0",
@@ -117,7 +119,7 @@
     	"rollup-plugin-typescript2": "^0.27.3",
     	"ts-jest": "^26.4.1",
     	typedoc: "^0.19.2",
-    	"typedoc-plugin-markdown": "^3.0.8",
+    	"typedoc-plugin-markdown": "^3.15.1",
     	typescript: "^4.0.3"
     };
     var scripts = {
@@ -127,7 +129,7 @@
     	"test:unit": "jest",
     	lint: "eslint \"*/**/*.{ts,js,json}\" --fix",
     	build: "rollup --config ./rollup.config.js",
-    	prepublishOnly: "yarn run doc && yarn run build && yarn run test",
+    	prepublishOnly: "yarn run build && yarn run test",
     	server: "nodemon ./server.js"
     };
     var repository = {
@@ -169,9 +171,9 @@
     	homepage: homepage
     };
 
-    var $schema = "http://json-schema.org/draft-07/schema#";
-    var $ref = "#/definitions/Session";
-    var definitions = {
+    var $schema$1 = "http://json-schema.org/draft-07/schema#";
+    var $ref$1 = "#/definitions/Session";
+    var definitions$1 = {
     	Session: {
     		type: "object",
     		properties: {
@@ -213,14 +215,14 @@
     	}
     };
     var SessionSchema = {
-    	$schema: $schema,
-    	$ref: $ref,
-    	definitions: definitions
+    	$schema: $schema$1,
+    	$ref: $ref$1,
+    	definitions: definitions$1
     };
 
-    var $schema$1 = "http://json-schema.org/draft-07/schema#";
-    var $ref$1 = "#/definitions/Sell";
-    var definitions$1 = {
+    var $schema = "http://json-schema.org/draft-07/schema#";
+    var $ref = "#/definitions/Sell";
+    var definitions = {
     	Sell: {
     		type: "object",
     		properties: {
@@ -405,9 +407,9 @@
     	}
     };
     var SellSchema = {
-    	$schema: $schema$1,
-    	$ref: $ref$1,
-    	definitions: definitions$1
+    	$schema: $schema,
+    	$ref: $ref,
+    	definitions: definitions
     };
 
     var rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
@@ -599,6 +601,17 @@
                 sum: data.payments.card,
             });
         }
+        function calcDiscountAmmount(item) {
+            try {
+                return currency__default["default"](item.cost)
+                    .multiply(item.quantity)
+                    .subtract(currency__default["default"](item.total)).value;
+            }
+            catch (error) {
+                console.log('[calcDiscountAmmount]', error);
+                return undefined;
+            }
+        }
         return {
             items: data.products.map(function (item) {
                 return item.description
@@ -608,6 +621,7 @@
                         price: item.cost,
                         quantity: item.quantity,
                         amount: item.total,
+                        infoDiscountAmount: calcDiscountAmmount(item),
                         tax: { type: 'none' },
                         markingCode: {
                             type: 'other',
@@ -620,6 +634,7 @@
                         type: 'position',
                         name: item.name,
                         price: item.cost,
+                        infoDiscountAmount: calcDiscountAmmount(item),
                         quantity: item.quantity,
                         amount: item.total,
                         tax: { type: 'none' },
@@ -649,8 +664,8 @@
     };
     var API = (function (session, options) {
         var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls, maxCodeLength = _a.maxCodeLength;
-        console.log("%c[ATOL] @bedunkevich/atol version: " + pkg.version, 'color:green', { baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls, maxCodeLength: maxCodeLength });
-        var API = axios__default['default'].create({
+        console.log("%c[ATOL] @bedunkevich/atol version: ".concat(pkg.version), 'color:green', { session: session }, { baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls, maxCodeLength: maxCodeLength });
+        var API = axios__default["default"].create({
             baseURL: baseUrl,
             timeout: 20000,
         });
@@ -660,21 +675,22 @@
             return API.post('/api/v2/requests', { uuid: uuid, request: request });
         };
         var get = function (uuid) {
-            return API.get("/api/v2/requests/" + uuid);
+            return API.get("/api/v2/requests/".concat(uuid));
         };
         /*
          * Открытие смены
          */
         var openShift = function () { return __awaiter(void 0, void 0, void 0, function () {
             var uuid, responce, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         uuid = v1();
-                        console.log("%c[ATOL] [openShift] " + uuid, 'color:green');
-                        _a.label = 1;
+                        console.log("%c[ATOL] [openShift] ".concat(uuid), 'color:green');
+                        _b.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _b.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, post(uuid, [
                                 {
                                     type: RequestTypes[RequestTypes.openShift],
@@ -682,12 +698,14 @@
                                 },
                             ])];
                     case 2:
-                        responce = _a.sent();
+                        responce = _b.sent();
                         console.log("%c[ATOL] [openShift] SUCCESS", 'color:green', responce.data);
                         return [2 /*return*/, responce];
                     case 3:
-                        error_1 = _a.sent();
-                        console.log("%c[ATOL] [openShift] FAIL", 'color:red', error_1.response.data);
+                        error_1 = _b.sent();
+                        if (axios__default["default"].isAxiosError(error_1)) {
+                            console.log("%c[ATOL] [openShift] FAIL", 'color:red', (_a = error_1.response) === null || _a === void 0 ? void 0 : _a.data);
+                        }
                         return [2 /*return*/, error_1];
                     case 4: return [2 /*return*/];
                 }
@@ -749,11 +767,10 @@
         var sell = function (data, type) {
             if (type === void 0) { type = RequestTypes.sell; }
             var uuid = v1();
-            console.log("%c[ATOL] [SELL] " + type, 'color:green', data);
+            console.log("%c[ATOL] [SELL] ".concat(type), 'color:green', data);
             validateData(SellSchema, data);
             return post(uuid, [
-                __assign({ type: RequestTypes[type], taxationType: taxationType,
-                    operator: operator }, data),
+                __assign({ type: RequestTypes[type], taxationType: taxationType, operator: operator }, data),
             ]);
         };
         /*
@@ -933,5 +950,5 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=index.umd.js.map
