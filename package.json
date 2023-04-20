@@ -1,6 +1,6 @@
 {
   "name": "@bedunkevich/atol",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "",
   "cdn": "dist/index.umd.js",
   "main": "dist/index.js",

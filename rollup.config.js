@@ -49,7 +49,6 @@ const options = {
       format: 'umd',
       globals: {
         axios: 'axios',
-        ['currency.js']: 'currency.js',
       },
     }),
     createOutputOptions({
@@ -58,11 +57,10 @@ const options = {
       plugins: [terser()],
       globals: {
         axios: 'axios',
-        ['currency.js']: 'currency.js',
       },
     }),
   ],
-  external: ['axios', 'currency.js'],
+  external: ['axios'],
   plugins: [
     json(),
     typescript2({

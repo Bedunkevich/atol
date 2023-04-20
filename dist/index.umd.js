@@ -1,19 +1,18 @@
 /*!
- * @bedunkevich/atol v0.1.16
+ * @bedunkevich/atol v0.1.18
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('axios'), require('currency.js')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'axios', 'currency.js'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.atol = {}, global.axios, global.currency.js));
-})(this, (function (exports, axios, currency) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('axios')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'axios'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.atol = {}, global.axios));
+})(this, (function (exports, axios) { 'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
     var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
-    var currency__default = /*#__PURE__*/_interopDefaultLegacy(currency);
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -80,7 +79,7 @@
     }
 
     var name = "@bedunkevich/atol";
-    var version = "0.1.16";
+    var version = "0.1.18";
     var description = "";
     var cdn = "dist/index.umd.js";
     var main = "dist/index.js";
@@ -603,9 +602,10 @@
         }
         function calcDiscountAmmount(item) {
             try {
-                return currency__default["default"](item.cost)
-                    .multiply(item.quantity)
-                    .subtract(currency__default["default"](item.total)).value;
+                // return currency(item.cost)
+                //   .multiply(item.quantity)
+                //   .subtract(currency(item.total)).value;
+                return Math.round((item.cost * item.quantity - item.total) * 100) / 100;
             }
             catch (error) {
                 console.log('[calcDiscountAmmount]', error);

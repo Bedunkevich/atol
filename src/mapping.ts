@@ -1,4 +1,4 @@
-import currency from 'currency.js';
+// import currency from 'currency.js';
 import type sellMock from './mocks/sell.json';
 import type { Item, Payment } from './types';
 
@@ -26,9 +26,11 @@ export const legacyMapSell = (
 
   function calcDiscountAmmount(item: LegacySell['products']['0']) {
     try {
-      return currency(item.cost)
-        .multiply(item.quantity)
-        .subtract(currency(item.total)).value;
+      // return currency(item.cost)
+      //   .multiply(item.quantity)
+      //   .subtract(currency(item.total)).value;
+
+      return Math.round((item.cost * item.quantity - item.total) * 100) / 100;
     } catch (error) {
       console.log('[calcDiscountAmmount]', error);
       return undefined;

@@ -1,11 +1,10 @@
 /*!
- * @bedunkevich/atol v0.1.16
+ * @bedunkevich/atol v0.1.18
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
 
 import axios from 'axios';
-import currency from 'currency.js';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -72,7 +71,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.16";
+var version = "0.1.18";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -595,9 +594,10 @@ var legacyMapSell = function (data, maxCodeLength) {
     }
     function calcDiscountAmmount(item) {
         try {
-            return currency(item.cost)
-                .multiply(item.quantity)
-                .subtract(currency(item.total)).value;
+            // return currency(item.cost)
+            //   .multiply(item.quantity)
+            //   .subtract(currency(item.total)).value;
+            return Math.round((item.cost * item.quantity - item.total) * 100) / 100;
         }
         catch (error) {
             console.log('[calcDiscountAmmount]', error);
