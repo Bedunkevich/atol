@@ -62,7 +62,7 @@ const options = {
       },
     }),
   ],
-  external: ['axios'],
+  external: ['axios', 'currency.js'],
   plugins: [
     json(),
     typescript2({
