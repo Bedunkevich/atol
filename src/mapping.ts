@@ -1,3 +1,4 @@
+import currency from 'currency.js';
 import type sellMock from './mocks/sell.json';
 import type { Item, Payment } from './types';
 
@@ -23,6 +24,17 @@ export const legacyMapSell = (
     });
   }
 
+  function calcDiscountAmmount(item: LegacySell['products']['0']) {
+    try {
+      return currency(item.cost)
+        .multiply(item.quantity)
+        .subtract(currency(item.total)).value;
+    } catch (error) {
+      console.log('[calcDiscountAmmount]', error);
+      return undefined;
+    }
+  }
+
   return {
     items: data.products.map(
       (item): Item =>
@@ -33,6 +45,7 @@ export const legacyMapSell = (
               price: item.cost,
               quantity: item.quantity,
               amount: item.total,
+              infoDiscountAmount: calcDiscountAmmount(item),
               tax: { type: 'none' },
               markingCode: {
                 type: 'other',
@@ -47,6 +60,7 @@ export const legacyMapSell = (
               type: 'position',
               name: item.name,
               price: item.cost,
+              infoDiscountAmount: calcDiscountAmmount(item),
               quantity: item.quantity,
               amount: item.total,
               tax: { type: 'none' },

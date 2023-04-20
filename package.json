@@ -1,6 +1,6 @@
 {
   "name": "@bedunkevich/atol",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "",
   "cdn": "dist/index.umd.js",
   "main": "dist/index.js",
@@ -11,7 +11,8 @@
   "umd:main": "dist/index.umd.js",
   "dependencies": {
     "ajv": "^7.0.2",
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "currency.js": "^2.0.4"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",

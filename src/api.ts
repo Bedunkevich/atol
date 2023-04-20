@@ -56,6 +56,7 @@ export default (session: Session, options: Options): AtolDriverInterface => {
   console.log(
     `%c[ATOL] @bedunkevich/atol version: ${pkg.version}`,
     'color:green',
+    { session },
     { baseUrl, maxCalls, delayBetweenCalls, maxCodeLength },
   );
 
@@ -95,12 +96,14 @@ export default (session: Session, options: Options): AtolDriverInterface => {
       console.log(`%c[ATOL] [openShift] SUCCESS`, 'color:green', responce.data);
       return responce;
     } catch (error) {
-      console.log(
-        `%c[ATOL] [openShift] FAIL`,
-        'color:red',
-        error.response.data,
-      );
-      return error;
+      if (axios.isAxiosError(error)) {
+        console.log(
+          `%c[ATOL] [openShift] FAIL`,
+          'color:red',
+          error.response?.data,
+        );
+      }
+      return error as any;
     }
   };
 
@@ -204,7 +207,7 @@ export default (session: Session, options: Options): AtolDriverInterface => {
         return checkStatus(uuid, callIndex + 1);
       }
       return status;
-    } catch (error) {
+    } catch (error: any) {
       console.log('%c[ATOL] [checkStatus]', 'color:red', error.message);
 
       if (callIndex >= maxCalls) {
@@ -230,7 +233,7 @@ export default (session: Session, options: Options): AtolDriverInterface => {
       const status = await checkStatus(uuid);
       console.log('%c[ATOL] [executeTask]', 'color:green', { uuid, status });
       return cb(true, { code: 0, res: 'ok' });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       const {
         error: { code, description },

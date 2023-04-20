@@ -60,7 +60,7 @@ describe('ATOL', () => {
 
     try {
       await Atol.openShift();
-    } catch (error) {
+    } catch (error: any) {
       expect(error.response.data).toStrictEqual({
         error: { code: 504, description: 'Авторизация не пройдена' },
       });

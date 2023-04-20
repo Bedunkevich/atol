@@ -27,8 +27,9 @@ const legacyProducts: any = [
     name: 'Бананы',
     cost: 10.0,
     quantity: 0.5,
+    discount: 50,
     description: '010290000237487221.%22Sb%3DTNTE%2A%3EB%21%0D%0A',
-    total: 5.0,
+    total: 2.5,
   },
 ];
 
@@ -40,7 +41,8 @@ const items: MinimumArray<Item> = [
     name: 'Бананы',
     price: 10.0,
     quantity: 0.5,
-    amount: 5.0,
+    amount: 2.5,
+    infoDiscountAmount: 2.5,
     tax: {
       type: 'none',
     },
