@@ -44,7 +44,7 @@ export const legacyMapSell = (
           ? {
               type: 'position',
               name: item.name,
-              price: item.cost,
+              price: item.total, // item.cost,
               quantity: item.quantity,
               amount: item.total,
               infoDiscountAmount: calcDiscountAmmount(item),
@@ -61,7 +61,7 @@ export const legacyMapSell = (
           : {
               type: 'position',
               name: item.name,
-              price: item.cost,
+              price: item.total, // item.cost,
               infoDiscountAmount: calcDiscountAmmount(item),
               quantity: item.quantity,
               amount: item.total,

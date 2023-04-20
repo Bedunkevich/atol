@@ -39,7 +39,7 @@ const items: MinimumArray<Item> = [
   {
     type: 'position',
     name: 'Бананы',
-    price: 10.0,
+    price: 2.5, // 10.0,
     quantity: 0.5,
     amount: 2.5,
     infoDiscountAmount: 2.5,
