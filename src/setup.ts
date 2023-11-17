@@ -5,7 +5,7 @@
 // Настройка для тестов
 
 import nock from 'nock';
-import type { Session, AtolDriverInterface } from './types';
+import type { Session } from './types';
 import { init } from '.';
 
 nock.disableNetConnect();
@@ -20,7 +20,7 @@ const SESSION: Session = {
   },
 };
 
-const Atol: AtolDriverInterface = init({
+const Atol = init({
   session: SESSION,
   options: {
     baseUrl: BASE_URL,

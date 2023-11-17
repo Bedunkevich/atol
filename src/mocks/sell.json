@@ -11,6 +11,14 @@
   },
   "products": [
     {
+      "discount": 10,
+      "description": "",
+      "cost": 3,
+      "quantity": 3,
+      "name": "FREE PRICE",
+      "total": 9
+    },
+    {
       "total": 2434.5,
       "discount": 10,
       "cost": 2705,

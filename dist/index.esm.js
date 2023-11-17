@@ -1,10 +1,11 @@
 /*!
- * @bedunkevich/atol v0.1.18
+ * @bedunkevich/atol v0.1.20
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
 
 import axios from 'axios';
+import currency from 'currency.js';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -71,7 +72,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.18";
+var version = "0.1.20";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -580,13 +581,13 @@ var RequestTypes;
 
 var legacyMapSell = function (data, maxCodeLength) {
     var payments = [];
-    if (data.payments.cash) {
+    if (data.payments.cash !== undefined) {
         payments.push({
             type: '0',
             sum: data.payments.cash,
         });
     }
-    if (data.payments.card) {
+    if (data.payments.card !== undefined) {
         payments.push({
             type: '1',
             sum: data.payments.card,
@@ -594,10 +595,11 @@ var legacyMapSell = function (data, maxCodeLength) {
     }
     function calcDiscountAmmount(item) {
         try {
-            // return currency(item.cost)
-            //   .multiply(item.quantity)
-            //   .subtract(currency(item.total)).value;
-            return Math.round((item.cost * item.quantity - item.total) * 100) / 100;
+            var discount_multiplier = currency(item.discount).divide(100);
+            var total_cost = currency(item.cost).multiply(item.quantity);
+            var result = currency(total_cost).multiply(discount_multiplier);
+            console.log('total_cost', total_cost.value, 'discount_multiplier', discount_multiplier.value, 'result', result.value);
+            return result.value;
         }
         catch (error) {
             console.log('[calcDiscountAmmount]', error);
@@ -605,33 +607,16 @@ var legacyMapSell = function (data, maxCodeLength) {
         }
     }
     return {
-        items: data.products.map(function (item) {
-            return item.description
-                ? {
-                    type: 'position',
-                    name: item.name,
-                    price: item.cost,
-                    quantity: item.quantity,
-                    amount: item.total,
-                    infoDiscountAmount: calcDiscountAmmount(item),
-                    tax: { type: 'none' },
-                    markingCode: {
-                        type: 'other',
-                        mark: btoa(maxCodeLength
-                            ? unescape(item.description).slice(0, maxCodeLength)
-                            : unescape(item.description)),
-                    },
-                }
-                : {
-                    type: 'position',
-                    name: item.name,
-                    price: item.cost,
-                    infoDiscountAmount: calcDiscountAmmount(item),
-                    quantity: item.quantity,
-                    amount: item.total,
-                    tax: { type: 'none' },
-                };
-        }),
+        items: data.products.map(function (item) { return (__assign({ type: 'position', name: item.name, price: item.cost, quantity: item.quantity, amount: item.total, infoDiscountAmount: calcDiscountAmmount(item), tax: { type: 'none' } }, (item.description
+            ? {
+                markingCode: {
+                    type: 'other',
+                    mark: btoa(maxCodeLength
+                        ? unescape(item.description).slice(0, maxCodeLength)
+                        : unescape(item.description)),
+                },
+            }
+            : undefined))); }),
         payments: payments,
     };
 };
@@ -759,11 +744,10 @@ var API = (function (session, options) {
     var sell = function (data, type) {
         if (type === void 0) { type = RequestTypes.sell; }
         var uuid = v1();
-        console.log("%c[ATOL] [SELL] ".concat(type), 'color:green', data);
         validateData(SellSchema, data);
-        return post(uuid, [
-            __assign({ type: RequestTypes[type], taxationType: taxationType, operator: operator }, data),
-        ]);
+        var task = __assign({ type: RequestTypes[type], taxationType: taxationType, operator: operator }, data);
+        console.log("%c[ATOL] [SELL] ".concat(type), 'color:green', task);
+        return post(uuid, [task]);
     };
     /*
      * Проверка статуса задания

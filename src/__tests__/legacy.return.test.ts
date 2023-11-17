@@ -2,15 +2,8 @@
  * @jest-environment node
  */
 
-import { nock, Atol, BASE_URL, SESSION } from '../setup';
-import {
-  RequestTypes,
-  SellRequest,
-  Item,
-  Payment,
-  MinimumArray,
-  TaskResultStatus,
-} from '../types';
+import { nock, Atol, BASE_URL } from '../setup';
+import { TaskResultStatus } from '../types';
 
 declare const global: any;
 
@@ -22,7 +15,7 @@ jest.mock('../uuid', () => ({
 
 const callBack = jest.fn();
 
-describe('ATOL LEGACY', () => {
+describe('ATOL LEGACY RETURN', () => {
   beforeAll(() => {
     global.btoa = (str: string) => {
       if (str.length !== 32) {
@@ -34,13 +27,13 @@ describe('ATOL LEGACY', () => {
   afterAll(() => {
     jest.resetAllMocks();
   });
-  it('sell | success', async () => {
+  it('return | success', async () => {
     nock(BASE_URL)
       .post('/api/v2/requests', {
         uuid: FAKE_UUID,
         request: [
           {
-            type: 'sell',
+            type: 'sellReturn',
             taxationType: 'usnIncome',
             operator: { name: 'Иванов', vatin: '123654789507' },
             items: [
@@ -54,7 +47,10 @@ describe('ATOL LEGACY', () => {
                 tax: { type: 'none' },
               },
             ],
-            payments: [{ type: '0', sum: 8.1 }],
+            payments: [
+              { type: '0', sum: 0 },
+              { type: '1', sum: 0 },
+            ],
           },
         ],
       })
@@ -78,9 +74,9 @@ describe('ATOL LEGACY', () => {
         ],
       });
 
-    await Atol.fprint.sell(
+    await Atol.fprint.ret(
       {
-        payments: { cash: 8.1 },
+        payments: { card: 0, cash: 0 },
         products: [
           {
             name: 'Бананы',

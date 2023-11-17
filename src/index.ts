@@ -1,5 +1,5 @@
 import API from './api';
-import type { Session, Options, AtolDriverInterface } from './types';
+import type { Session, Options } from './types';
 
 export const init = ({
   session,
@@ -7,4 +7,4 @@ export const init = ({
 }: {
   session: Session;
   options?: Options;
-}): AtolDriverInterface => API(session, options);
+}) => API(session, options);

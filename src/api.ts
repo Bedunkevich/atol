@@ -11,7 +11,6 @@ import {
   TaskResultResponce,
   TaskResultStatus,
   RequestTypes,
-  AtolDriverInterface,
   Sell,
   SellRequest,
   LegacyCallback,
@@ -45,7 +44,7 @@ const validateData = (schema: any, data: any) => {
   }
 };
 
-export default (session: Session, options: Options): AtolDriverInterface => {
+export default (session: Session, options: Options) => {
   const { baseUrl, maxCalls, delayBetweenCalls, maxCodeLength } = {
     baseUrl: 'http://127.0.0.1:16732',
     maxCalls: 7,
@@ -170,18 +169,17 @@ export default (session: Session, options: Options): AtolDriverInterface => {
   ): Promise<AxiosPromise<TaskResponce>> => {
     const uuid = buildUUID();
 
-    console.log(`%c[ATOL] [SELL] ${type}`, 'color:green', data);
-
     validateData(SellSchema, data);
 
-    return post<SellRequest[]>(uuid, [
-      {
-        type: RequestTypes[type],
-        taxationType,
-        operator,
-        ...data,
-      },
-    ]);
+    const task = {
+      type: RequestTypes[type],
+      taxationType,
+      operator,
+      ...data,
+    };
+    console.log(`%c[ATOL] [SELL] ${type}`, 'color:green', task);
+
+    return post<SellRequest[]>(uuid, [task]);
   };
 
   /*

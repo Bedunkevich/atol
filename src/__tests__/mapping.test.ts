@@ -12,6 +12,12 @@ describe('LEGACY', () => {
         ],
         items: [
           expect.objectContaining({
+            price: 3,
+            quantity: 3,
+            amount: 9,
+            infoDiscountAmount: 0.9,
+          }),
+          expect.objectContaining({
             infoDiscountAmount: 270.5,
             markingCode: {
               type: 'other',
