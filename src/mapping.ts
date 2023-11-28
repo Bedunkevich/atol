@@ -1,13 +1,19 @@
 import currency from 'currency.js';
-import type sellMock from './mocks/sell.json';
-import type { Item, Payment } from './types';
+import type { Item, Payment, LegacyObject } from './types';
 
-type LegacySell = typeof sellMock;
+type legacyMapSellOptions = {
+  maxCodeLength?: number;
+  useMarkingCode?: boolean;
+};
 
 export const legacyMapSell = (
-  data: LegacySell,
-  maxCodeLength?: number,
+  data: LegacyObject,
+  options: legacyMapSellOptions = {
+    maxCodeLength: undefined,
+    useMarkingCode: true,
+  },
 ): { items: Item[]; payments: Payment[] } => {
+  const { maxCodeLength, useMarkingCode } = options;
   const payments: Payment[] = [];
 
   if (data.payments.cash !== undefined) {
@@ -24,7 +30,7 @@ export const legacyMapSell = (
     });
   }
 
-  function calcDiscountAmmount(item: LegacySell['products']['0']) {
+  function calcDiscountAmmount(item: LegacyObject['products']['0']) {
     try {
       const discount_multiplier = currency(item.discount).divide(100);
       const total_cost = currency(item.cost).multiply(item.quantity);
@@ -41,34 +47,62 @@ export const legacyMapSell = (
       return result.value;
     } catch (error) {
       console.log('[calcDiscountAmmount]', error);
-      return undefined;
+      return 0;
     }
   }
 
+  const hurryAmmout = currency(data.total_price).multiply(
+    currency(data.hurry / 100),
+  ).value;
+
   return {
-    items: data.products.map(
-      (item): Item => ({
-        type: 'position',
-        name: item.name,
-        price: item.cost,
-        quantity: item.quantity,
-        amount: item.total,
-        infoDiscountAmount: calcDiscountAmmount(item),
-        tax: { type: 'none' },
-        ...(item.description
+    items: data.products
+      .map((item): Item => {
+        const infoDiscountAmount = calcDiscountAmmount(item);
+        const amount = currency(item.total).add(infoDiscountAmount).value;
+
+        function getMarkingCode() {
+          try {
+            return {
+              type: 'other' as const,
+              mark: btoa(
+                maxCodeLength
+                  ? unescape(item.description).slice(0, maxCodeLength)
+                  : unescape(item.description),
+              ),
+            };
+          } catch (error) {
+            return undefined;
+          }
+        }
+
+        return {
+          type: 'position',
+          name: item.name,
+          price: item.cost,
+          quantity: item.quantity,
+          amount,
+          infoDiscountAmount,
+          tax: { type: 'none' },
+          ...(item.description && useMarkingCode
+            ? {
+                markingCode: getMarkingCode(),
+              }
+            : undefined),
+        };
+      })
+      .concat(
+        data.hurry > 0
           ? {
-              markingCode: {
-                type: 'other',
-                mark: btoa(
-                  maxCodeLength
-                    ? unescape(item.description).slice(0, maxCodeLength)
-                    : unescape(item.description),
-                ),
-              },
+              type: 'position',
+              name: 'Срочность',
+              price: hurryAmmout,
+              quantity: 1,
+              amount: hurryAmmout,
+              tax: { type: 'none' },
             }
-          : undefined),
-      }),
-    ),
+          : [],
+      ),
     payments,
   };
 };

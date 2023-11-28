@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.20
+ * @bedunkevich/atol v0.1.21
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -80,7 +80,7 @@
     }
 
     var name = "@bedunkevich/atol";
-    var version = "0.1.20";
+    var version = "0.1.21";
     var description = "";
     var cdn = "dist/index.umd.js";
     var main = "dist/index.js";
@@ -587,7 +587,12 @@
         RequestTypes["reportX"] = "reportX";
     })(RequestTypes || (RequestTypes = {}));
 
-    var legacyMapSell = function (data, maxCodeLength) {
+    var legacyMapSell = function (data, options) {
+        if (options === void 0) { options = {
+            maxCodeLength: undefined,
+            useMarkingCode: true,
+        }; }
+        var maxCodeLength = options.maxCodeLength, useMarkingCode = options.useMarkingCode;
         var payments = [];
         if (data.payments.cash !== undefined) {
             payments.push({
@@ -611,20 +616,44 @@
             }
             catch (error) {
                 console.log('[calcDiscountAmmount]', error);
-                return undefined;
+                return 0;
             }
         }
+        var hurryAmmout = currency__default["default"](data.total_price).multiply(currency__default["default"](data.hurry / 100)).value;
         return {
-            items: data.products.map(function (item) { return (__assign({ type: 'position', name: item.name, price: item.cost, quantity: item.quantity, amount: item.total, infoDiscountAmount: calcDiscountAmmount(item), tax: { type: 'none' } }, (item.description
-                ? {
-                    markingCode: {
-                        type: 'other',
-                        mark: btoa(maxCodeLength
-                            ? unescape(item.description).slice(0, maxCodeLength)
-                            : unescape(item.description)),
-                    },
+            items: data.products
+                .map(function (item) {
+                var infoDiscountAmount = calcDiscountAmmount(item);
+                var amount = currency__default["default"](item.total).add(infoDiscountAmount).value;
+                function getMarkingCode() {
+                    try {
+                        return {
+                            type: 'other',
+                            mark: btoa(maxCodeLength
+                                ? unescape(item.description).slice(0, maxCodeLength)
+                                : unescape(item.description)),
+                        };
+                    }
+                    catch (error) {
+                        return undefined;
+                    }
                 }
-                : undefined))); }),
+                return __assign({ type: 'position', name: item.name, price: item.cost, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, tax: { type: 'none' } }, (item.description && useMarkingCode
+                    ? {
+                        markingCode: getMarkingCode(),
+                    }
+                    : undefined));
+            })
+                .concat(data.hurry > 0
+                ? {
+                    type: 'position',
+                    name: 'Срочность',
+                    price: hurryAmmout,
+                    quantity: 1,
+                    amount: hurryAmmout,
+                    tax: { type: 'none' },
+                }
+                : []),
             payments: payments,
         };
     };
@@ -648,7 +677,7 @@
         }
     };
     var API = (function (session, options) {
-        var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000 }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls, maxCodeLength = _a.maxCodeLength;
+        var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000, useMarkingCode: true }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls, maxCodeLength = _a.maxCodeLength, useMarkingCode = _a.useMarkingCode;
         console.log("%c[ATOL] @bedunkevich/atol version: ".concat(pkg.version), 'color:green', { session: session }, { baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls, maxCodeLength: maxCodeLength });
         var API = axios__default["default"].create({
             baseURL: baseUrl,
@@ -849,7 +878,9 @@
                         switch (_a.label) {
                             case 0:
                                 console.log('%c[ATOL] [LEGACY]', 'color:green', data);
-                                return [4 /*yield*/, executeTask(function () { return sell(legacyMapSell(data, maxCodeLength)); }, cb)];
+                                return [4 /*yield*/, executeTask(function () {
+                                        return sell(legacyMapSell(data, { useMarkingCode: useMarkingCode, maxCodeLength: maxCodeLength }));
+                                    }, cb)];
                             case 1:
                                 _a.sent();
                                 return [2 /*return*/];
@@ -862,7 +893,7 @@
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, executeTask(function () {
-                                    return sell(legacyMapSell(data, maxCodeLength), RequestTypes.sellReturn);
+                                    return sell(legacyMapSell(data, { maxCodeLength: maxCodeLength, useMarkingCode: useMarkingCode }), RequestTypes.sellReturn);
                                 }, cb)];
                             case 1:
                                 _a.sent();

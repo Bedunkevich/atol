@@ -11,6 +11,7 @@ export type Options = Partial<{
     maxCalls: number;
     delayBetweenCalls: number;
     maxCodeLength: number;
+    useMarkingCode: boolean;
 }> | undefined;
 export type TaskResponce = Partial<{
     uuid: string;
@@ -103,4 +104,30 @@ export type AtolDriverInterface = {
     checkStatus: (uuid: string, callIndex?: number) => Promise<TaskResultStatus>;
     fprint: any;
 };
+type LegacyPayment = {
+    value: number;
+    id: number;
+};
+type LegacyProduct = {
+    discount: number;
+    description: string;
+    cost: number;
+    quantity: number;
+    name: string;
+    total: number;
+};
+export type LegacyObject = {
+    hurry: number;
+    number: string;
+    other_payments: LegacyPayment[];
+    payments: {
+        card: number;
+        cash: number;
+    };
+    products: LegacyProduct[];
+    topay: number;
+    total_price: number;
+    user: string;
+};
+export {};
 //# sourceMappingURL=types.d.ts.map

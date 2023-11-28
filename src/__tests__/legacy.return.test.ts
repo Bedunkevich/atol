@@ -42,7 +42,7 @@ describe('ATOL LEGACY RETURN', () => {
                 name: 'Бананы',
                 price: 3,
                 quantity: 3,
-                amount: 8.1,
+                amount: 9,
                 infoDiscountAmount: 0.9,
                 tax: { type: 'none' },
               },

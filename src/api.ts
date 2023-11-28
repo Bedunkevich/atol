@@ -45,10 +45,17 @@ const validateData = (schema: any, data: any) => {
 };
 
 export default (session: Session, options: Options) => {
-  const { baseUrl, maxCalls, delayBetweenCalls, maxCodeLength } = {
+  const {
+    baseUrl,
+    maxCalls,
+    delayBetweenCalls,
+    maxCodeLength,
+    useMarkingCode,
+  } = {
     baseUrl: 'http://127.0.0.1:16732',
     maxCalls: 7,
     delayBetweenCalls: 2000,
+    useMarkingCode: true,
     ...options,
   };
 
@@ -248,7 +255,8 @@ export default (session: Session, options: Options) => {
     sell: async function (data: any, cb: LegacyCallback) {
       console.log('%c[ATOL] [LEGACY]', 'color:green', data);
       await executeTask(
-        () => sell(legacyMapSell(data, maxCodeLength) as any),
+        () =>
+          sell(legacyMapSell(data, { useMarkingCode, maxCodeLength }) as any),
         cb,
       );
     },
@@ -256,7 +264,7 @@ export default (session: Session, options: Options) => {
       await executeTask(
         () =>
           sell(
-            legacyMapSell(data, maxCodeLength) as any,
+            legacyMapSell(data, { maxCodeLength, useMarkingCode }) as any,
             RequestTypes.sellReturn,
           ),
         cb,

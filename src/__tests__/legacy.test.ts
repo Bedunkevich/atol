@@ -2,15 +2,8 @@
  * @jest-environment node
  */
 
-import { nock, Atol, BASE_URL, SESSION } from '../setup';
-import {
-  RequestTypes,
-  SellRequest,
-  Item,
-  Payment,
-  MinimumArray,
-  TaskResultStatus,
-} from '../types';
+import { nock, Atol, BASE_URL } from '../setup';
+import { TaskResultStatus } from '../types';
 
 declare const global: any;
 
@@ -49,7 +42,7 @@ describe('ATOL LEGACY', () => {
                 name: 'Бананы',
                 price: 3,
                 quantity: 3,
-                amount: 8.1,
+                amount: 9,
                 infoDiscountAmount: 0.9,
                 tax: { type: 'none' },
               },
