@@ -4,28 +4,28 @@ describe('LEGACY', () => {
   it('Mapping to sell with hurry', async () => {
     const responce = legacyMapSell(
       {
-        hurry: 50,
-        topay: 14.25,
+        hurry: 100,
+        topay: 36,
         user: 'Администратор',
-        total_price: 9.5,
+        total_price: 18,
         number: '3-51',
         products: [
           {
-            discount: 5,
-            quantity: 1,
-            description: 'Описание',
+            quantity: 2,
+            description: '',
+            discount: 10,
             cost: 10,
             name: 'Свободная цена',
-            total: 9.5,
+            total: 18,
           },
         ],
         payments: {
-          cash: 14.25,
+          cash: 36,
           card: 0,
         },
         other_payments: [
           {
-            value: 14.25,
+            value: 36,
             id: 1,
           },
         ],
@@ -36,22 +36,22 @@ describe('LEGACY', () => {
     expect(responce).toMatchObject(
       expect.objectContaining({
         payments: [
-          { type: '0', sum: 14.25 },
+          { type: '0', sum: 36.0 },
           { type: '1', sum: 0 },
         ],
         items: [
           expect.objectContaining({
-            price: 10,
-            quantity: 1,
-            amount: 10,
-            infoDiscountAmount: 0.5,
+            price: 9,
+            quantity: 2,
+            amount: 18,
+            infoDiscountAmount: 2,
           }),
           expect.objectContaining({
             type: 'position',
             name: 'Срочность',
-            price: 4.75,
+            price: 18,
             quantity: 1,
-            amount: 4.75,
+            amount: 18,
           }),
         ],
       }),

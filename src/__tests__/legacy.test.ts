@@ -40,9 +40,9 @@ describe('ATOL LEGACY', () => {
               {
                 type: 'position',
                 name: 'Бананы',
-                price: 3,
+                price: 2.7,
                 quantity: 3,
-                amount: 9,
+                amount: 8.1,
                 infoDiscountAmount: 0.9,
                 tax: { type: 'none' },
               },

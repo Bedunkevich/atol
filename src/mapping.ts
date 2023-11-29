@@ -33,12 +33,9 @@ export const legacyMapSell = (
   function calcDiscountAmmount(item: LegacyObject['products']['0']) {
     try {
       const discount_multiplier = currency(item.discount).divide(100);
-      const total_cost = currency(item.cost).multiply(item.quantity);
-      const result = currency(total_cost).multiply(discount_multiplier);
+      const result = currency(item.cost).multiply(discount_multiplier);
 
       console.log(
-        'total_cost',
-        total_cost.value,
         'discount_multiplier',
         discount_multiplier.value,
         'result',
@@ -58,8 +55,12 @@ export const legacyMapSell = (
   return {
     items: data.products
       .map((item): Item => {
-        const infoDiscountAmount = calcDiscountAmmount(item);
-        const amount = currency(item.total).add(infoDiscountAmount).value;
+        const itemDiscount = calcDiscountAmmount(item);
+        const price = currency(item.cost).subtract(itemDiscount).value;
+        const amount = currency(item.total).value;
+        const infoDiscountAmount = currency(itemDiscount).multiply(
+          item.quantity,
+        ).value;
 
         function getMarkingCode() {
           try {
@@ -79,7 +80,7 @@ export const legacyMapSell = (
         return {
           type: 'position',
           name: item.name,
-          price: item.cost,
+          price,
           quantity: item.quantity,
           amount,
           infoDiscountAmount,
