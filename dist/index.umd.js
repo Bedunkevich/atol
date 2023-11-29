@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.21
+ * @bedunkevich/atol v0.1.22
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -80,7 +80,7 @@
     }
 
     var name = "@bedunkevich/atol";
-    var version = "0.1.21";
+    var version = "0.1.22";
     var description = "";
     var cdn = "dist/index.umd.js";
     var main = "dist/index.js";
@@ -609,9 +609,8 @@
         function calcDiscountAmmount(item) {
             try {
                 var discount_multiplier = currency__default["default"](item.discount).divide(100);
-                var total_cost = currency__default["default"](item.cost).multiply(item.quantity);
-                var result = currency__default["default"](total_cost).multiply(discount_multiplier);
-                console.log('total_cost', total_cost.value, 'discount_multiplier', discount_multiplier.value, 'result', result.value);
+                var result = currency__default["default"](item.cost).multiply(discount_multiplier);
+                console.log('discount_multiplier', discount_multiplier.value, 'result', result.value);
                 return result.value;
             }
             catch (error) {
@@ -623,8 +622,10 @@
         return {
             items: data.products
                 .map(function (item) {
-                var infoDiscountAmount = calcDiscountAmmount(item);
-                var amount = currency__default["default"](item.total).add(infoDiscountAmount).value;
+                var itemDiscount = calcDiscountAmmount(item);
+                var price = currency__default["default"](item.cost).subtract(itemDiscount).value;
+                var amount = currency__default["default"](item.total).value;
+                var infoDiscountAmount = currency__default["default"](itemDiscount).multiply(item.quantity).value;
                 function getMarkingCode() {
                     try {
                         return {
@@ -638,7 +639,7 @@
                         return undefined;
                     }
                 }
-                return __assign({ type: 'position', name: item.name, price: item.cost, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, tax: { type: 'none' } }, (item.description && useMarkingCode
+                return __assign({ type: 'position', name: item.name, price: price, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, tax: { type: 'none' } }, (item.description && useMarkingCode
                     ? {
                         markingCode: getMarkingCode(),
                     }
