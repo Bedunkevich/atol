@@ -48,62 +48,66 @@ export const legacyMapSell = (
     }
   }
 
-  const hurryAmmout = currency(data.total_price).multiply(
+  let full_cost = 0;
+
+  const items = data.products.map((item): Item => {
+    const itemDiscount = calcDiscountAmmount(item);
+    const price = currency(item.cost).subtract(itemDiscount).value;
+    const amount = currency(item.total).value;
+    const infoDiscountAmount = currency(itemDiscount).multiply(
+      item.quantity,
+    ).value;
+
+    function getMarkingCode() {
+      try {
+        return {
+          type: 'other' as const,
+          mark: btoa(
+            maxCodeLength
+              ? unescape(item.description).slice(0, maxCodeLength)
+              : unescape(item.description),
+          ),
+        };
+      } catch (error) {
+        return undefined;
+      }
+    }
+
+    full_cost += amount;
+
+    return {
+      type: 'position',
+      name: item.name,
+      price,
+      quantity: item.quantity,
+      amount,
+      infoDiscountAmount,
+      tax: { type: 'none' },
+      ...(item.description && useMarkingCode
+        ? {
+            markingCode: getMarkingCode(),
+          }
+        : undefined),
+    };
+  });
+
+  const hurryAmmout = currency(full_cost).multiply(
     currency(data.hurry / 100),
   ).value;
 
+  if (data.hurry > 0) {
+    items.push({
+      type: 'position',
+      name: 'Срочность',
+      price: hurryAmmout,
+      quantity: 1,
+      amount: hurryAmmout,
+      tax: { type: 'none' },
+    });
+  }
+
   return {
-    items: data.products
-      .map((item): Item => {
-        const itemDiscount = calcDiscountAmmount(item);
-        const price = currency(item.cost).subtract(itemDiscount).value;
-        const amount = currency(item.total).value;
-        const infoDiscountAmount = currency(itemDiscount).multiply(
-          item.quantity,
-        ).value;
-
-        function getMarkingCode() {
-          try {
-            return {
-              type: 'other' as const,
-              mark: btoa(
-                maxCodeLength
-                  ? unescape(item.description).slice(0, maxCodeLength)
-                  : unescape(item.description),
-              ),
-            };
-          } catch (error) {
-            return undefined;
-          }
-        }
-
-        return {
-          type: 'position',
-          name: item.name,
-          price,
-          quantity: item.quantity,
-          amount,
-          infoDiscountAmount,
-          tax: { type: 'none' },
-          ...(item.description && useMarkingCode
-            ? {
-                markingCode: getMarkingCode(),
-              }
-            : undefined),
-        };
-      })
-      .concat(
-        data.hurry > 0
-          ? {
-              type: 'position',
-              name: 'Срочность',
-              price: hurryAmmout,
-              quantity: 1,
-              amount: hurryAmmout,
-              tax: { type: 'none' },
-            }
-          : [],
-      ),
+    items,
     payments,
   };
 };

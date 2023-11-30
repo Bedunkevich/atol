@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.22
+ * @bedunkevich/atol v0.1.23
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -72,7 +72,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.22";
+var version = "0.1.23";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -610,43 +610,45 @@ var legacyMapSell = function (data, options) {
             return 0;
         }
     }
-    var hurryAmmout = currency(data.total_price).multiply(currency(data.hurry / 100)).value;
-    return {
-        items: data.products
-            .map(function (item) {
-            var itemDiscount = calcDiscountAmmount(item);
-            var price = currency(item.cost).subtract(itemDiscount).value;
-            var amount = currency(item.total).value;
-            var infoDiscountAmount = currency(itemDiscount).multiply(item.quantity).value;
-            function getMarkingCode() {
-                try {
-                    return {
-                        type: 'other',
-                        mark: btoa(maxCodeLength
-                            ? unescape(item.description).slice(0, maxCodeLength)
-                            : unescape(item.description)),
-                    };
-                }
-                catch (error) {
-                    return undefined;
-                }
+    var full_cost = 0;
+    var items = data.products.map(function (item) {
+        var itemDiscount = calcDiscountAmmount(item);
+        var price = currency(item.cost).subtract(itemDiscount).value;
+        var amount = currency(item.total).value;
+        var infoDiscountAmount = currency(itemDiscount).multiply(item.quantity).value;
+        function getMarkingCode() {
+            try {
+                return {
+                    type: 'other',
+                    mark: btoa(maxCodeLength
+                        ? unescape(item.description).slice(0, maxCodeLength)
+                        : unescape(item.description)),
+                };
             }
-            return __assign({ type: 'position', name: item.name, price: price, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, tax: { type: 'none' } }, (item.description && useMarkingCode
-                ? {
-                    markingCode: getMarkingCode(),
-                }
-                : undefined));
-        })
-            .concat(data.hurry > 0
+            catch (error) {
+                return undefined;
+            }
+        }
+        full_cost += amount;
+        return __assign({ type: 'position', name: item.name, price: price, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, tax: { type: 'none' } }, (item.description && useMarkingCode
             ? {
-                type: 'position',
-                name: 'Срочность',
-                price: hurryAmmout,
-                quantity: 1,
-                amount: hurryAmmout,
-                tax: { type: 'none' },
+                markingCode: getMarkingCode(),
             }
-            : []),
+            : undefined));
+    });
+    var hurryAmmout = currency(full_cost).multiply(currency(data.hurry / 100)).value;
+    if (data.hurry > 0) {
+        items.push({
+            type: 'position',
+            name: 'Срочность',
+            price: hurryAmmout,
+            quantity: 1,
+            amount: hurryAmmout,
+            tax: { type: 'none' },
+        });
+    }
+    return {
+        items: items,
         payments: payments,
     };
 };
