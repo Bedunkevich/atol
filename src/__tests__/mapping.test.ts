@@ -1,6 +1,17 @@
+import { getMarkingCode } from '../helpers';
 import { legacyMapSell } from '../mapping';
 
 describe('LEGACY', () => {
+  it('Get right marking code', async () => {
+    const cuttedString =
+      '0104660251635565215a2E?J2WX2Zob9100C092wDBpyFej7JaKEYTI+QtD3pGT8+yIu0CGRoDr3x3U/K0ui3aViobHT2/By+q5ni6Ngi7ztHsiVNYGMK7cDS3xXw==';
+    const { mark } = getMarkingCode(cuttedString) || {};
+
+    expect(mark).toBe(
+      'MDEwNDY2MDI1MTYzNTU2NTIxNWEyRT9KMldYMlpvYh05MTAwQzAdOTJ3REJweUZlajdKYUtFWVRJK1F0RDNwR1Q4K3lJdTBDR1JvRHIzeDNVL0swdWkzYVZpb2JIVDIvQnkrcTVuaTZOZ2k3enRIc2lWTllHTUs3Y0RTM3hYdz09',
+    );
+  });
+
   it('Mapping to sell with hurry', async () => {
     const responce = legacyMapSell(
       {

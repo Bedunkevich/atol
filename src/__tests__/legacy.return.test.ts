@@ -44,6 +44,7 @@ describe('ATOL LEGACY RETURN', () => {
                 quantity: 3,
                 amount: 8.1,
                 infoDiscountAmount: 0.9,
+                measurementUnit: 'шт',
                 tax: { type: 'none' },
               },
             ],

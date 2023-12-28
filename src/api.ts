@@ -184,7 +184,7 @@ export default (session: Session, options: Options) => {
       operator,
       ...data,
     };
-    console.log(`%c[ATOL] [SELL] ${type}`, 'color:green', task);
+    console.log(`%c[ATOL] [SELL] [${type}]`, 'color:green', task);
 
     return post<SellRequest[]>(uuid, [task]);
   };

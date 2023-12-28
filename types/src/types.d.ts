@@ -75,6 +75,7 @@ export type Item = {
     paymentMethod?: 'fullPrepayment' | 'prepayment' | 'advance' | 'fullPayment' | 'partialPayment' | 'credit' | 'creditPayment';
     paymentObject?: 'commodity' | 'excise' | 'job' | 'service';
     department?: number;
+    measurementUnit?: string;
     markingCode?: {
         type?: 'other' | 'egais20' | 'egais30';
         mark: string;

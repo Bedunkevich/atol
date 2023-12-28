@@ -25,7 +25,7 @@ const Atol = init({
   options: {
     baseUrl: BASE_URL,
     maxCalls: 15,
-    maxCodeLength: 32,
+    maxCodeLength: 31,
   },
 });
 

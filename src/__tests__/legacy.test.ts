@@ -18,10 +18,10 @@ const callBack = jest.fn();
 describe('ATOL LEGACY', () => {
   beforeAll(() => {
     global.btoa = (str: string) => {
-      if (str.length !== 32) {
+      if (str.length >= 128) {
         throw new Error('Не верная длинна маркировки');
       }
-      return 'MDEwMjkwMDAwMjM3NDg3MjIxLiJTYj1UTlRFKj5CIQ0=';
+      return 'MDEwNDY2MDI1MTYzNTU2NTIxNWEyRT9KMldYMlpvYh05MTAwQzAdOTJ3REJweUZlajdKYUtFWVRJK1F0RDNwR1Q4K3lJdTBDR1JvRHIzeDNVL0swdWkzYVZpb2JIVDIvQnkrcTVuaTZOZ2k3enRIc2lWTllHTUs3Y0RTM3hYdz09';
     };
   });
   afterAll(() => {
@@ -43,6 +43,7 @@ describe('ATOL LEGACY', () => {
                 price: 2.7,
                 quantity: 3,
                 amount: 8.1,
+                measurementUnit: 'шт',
                 infoDiscountAmount: 0.9,
                 tax: { type: 'none' },
               },

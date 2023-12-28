@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.23
+ * @bedunkevich/atol v0.1.24
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -72,7 +72,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.23";
+var version = "0.1.24";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -555,6 +555,33 @@ function v1(options, buf, offset) {
 var delay = function (time) {
     return new Promise(function (resolve) { return setTimeout(resolve, time); });
 };
+var FIRST_BLOCK_LENGTH = 31;
+var SECOND_BLOCK_LENGTH = 6;
+var FULL_CODE_LENGTH = 127;
+var getMarkingCode = function (description) {
+    if (!description) {
+        return undefined;
+    }
+    try {
+        var SEPARATOR_SYMBOL = '\u001D';
+        var mark = description
+            ? description.slice(0, FIRST_BLOCK_LENGTH) +
+                SEPARATOR_SYMBOL +
+                description.slice(FIRST_BLOCK_LENGTH, FIRST_BLOCK_LENGTH + SECOND_BLOCK_LENGTH) +
+                SEPARATOR_SYMBOL +
+                description.slice(FIRST_BLOCK_LENGTH + SECOND_BLOCK_LENGTH, FULL_CODE_LENGTH)
+            : '';
+        console.log('mark', mark);
+        console.log('btoa mark', btoa(mark));
+        return {
+            type: 'other',
+            mark: btoa(mark),
+        };
+    }
+    catch (error) {
+        return undefined;
+    }
+};
 
 var TaskResultStatus;
 (function (TaskResultStatus) {
@@ -586,6 +613,7 @@ var legacyMapSell = function (data, options) {
     }; }
     var maxCodeLength = options.maxCodeLength, useMarkingCode = options.useMarkingCode;
     var payments = [];
+    console.log({ maxCodeLength: maxCodeLength });
     if (data.payments.cash !== undefined) {
         payments.push({
             type: '0',
@@ -616,23 +644,10 @@ var legacyMapSell = function (data, options) {
         var price = currency(item.cost).subtract(itemDiscount).value;
         var amount = currency(item.total).value;
         var infoDiscountAmount = currency(itemDiscount).multiply(item.quantity).value;
-        function getMarkingCode() {
-            try {
-                return {
-                    type: 'other',
-                    mark: btoa(maxCodeLength
-                        ? unescape(item.description).slice(0, maxCodeLength)
-                        : unescape(item.description)),
-                };
-            }
-            catch (error) {
-                return undefined;
-            }
-        }
         full_cost += amount;
-        return __assign({ type: 'position', name: item.name, price: price, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, tax: { type: 'none' } }, (item.description && useMarkingCode
+        return __assign({ type: 'position', name: item.name, price: price, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, measurementUnit: 'шт', tax: { type: 'none' } }, (item.description && useMarkingCode
             ? {
-                markingCode: getMarkingCode(),
+                markingCode: getMarkingCode(item.description),
             }
             : undefined));
     });
@@ -642,11 +657,13 @@ var legacyMapSell = function (data, options) {
             type: 'position',
             name: 'Срочность',
             price: hurryAmmout,
+            measurementUnit: 'шт',
             quantity: 1,
             amount: hurryAmmout,
             tax: { type: 'none' },
         });
     }
+    console.log({ items: items, payments: payments });
     return {
         items: items,
         payments: payments,
@@ -778,7 +795,7 @@ var API = (function (session, options) {
         var uuid = v1();
         validateData(SellSchema, data);
         var task = __assign({ type: RequestTypes[type], taxationType: taxationType, operator: operator }, data);
-        console.log("%c[ATOL] [SELL] ".concat(type), 'color:green', task);
+        console.log("%c[ATOL] [SELL] [".concat(type, "]"), 'color:green', task);
         return post(uuid, [task]);
     };
     /*
