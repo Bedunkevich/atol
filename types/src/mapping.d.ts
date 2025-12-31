@@ -1,7 +1,9 @@
-import type { Item, Payment, LegacyObject } from './types';
+import type { Item, Payment, LegacyObject, PositionTax } from './types';
 type legacyMapSellOptions = {
     maxCodeLength?: number;
     useMarkingCode?: boolean;
+    measurementUnit?: number | string;
+    positionTax: PositionTax;
 };
 export declare const legacyMapSell: (data: LegacyObject, options?: legacyMapSellOptions) => {
     items: Item[];

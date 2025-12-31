@@ -1,5 +1,5 @@
 /*!
- * @bedunkevich/atol v0.1.24
+ * @bedunkevich/atol v0.1.28
  * (c) Stanislav Bedunkevich
  * Released under the MIT License.
  */
@@ -81,7 +81,7 @@ function __generator(thisArg, body) {
 }
 
 var name = "@bedunkevich/atol";
-var version = "0.1.24";
+var version = "0.1.28";
 var description = "";
 var cdn = "dist/index.umd.js";
 var main = "dist/index.js";
@@ -181,6 +181,9 @@ var definitions$1 = {
 			taxationType: {
 				$ref: "#/definitions/TaxationType"
 			},
+			positionTax: {
+				$ref: "#/definitions/PositionTax"
+			},
 			operator: {
 				type: "object",
 				properties: {
@@ -199,7 +202,8 @@ var definitions$1 = {
 		},
 		required: [
 			"taxationType",
-			"operator"
+			"operator",
+			"positionTax"
 		],
 		additionalProperties: false
 	},
@@ -360,7 +364,13 @@ var definitions = {
 			"vat18",
 			"vat118",
 			"vat20",
-			"vat120"
+			"vat120",
+			"vat5",
+			"vat105",
+			"vat7",
+			"vat107",
+			"vat22",
+			"vat122"
 		]
 	},
 	"MinimumArray<Payment>": {
@@ -619,10 +629,17 @@ var legacyMapSell = function (data, options) {
     if (options === void 0) { options = {
         maxCodeLength: undefined,
         useMarkingCode: true,
+        measurementUnit: undefined,
+        positionTax: 'none',
     }; }
-    var maxCodeLength = options.maxCodeLength, useMarkingCode = options.useMarkingCode;
+    var maxCodeLength = options.maxCodeLength, useMarkingCode = options.useMarkingCode, measurementUnit = options.measurementUnit, positionTax = options.positionTax;
     var payments = [];
-    console.log({ maxCodeLength: maxCodeLength });
+    console.log('%c[ATOL]..........................legacyMapSell', {
+        maxCodeLength: maxCodeLength,
+        measurementUnit: measurementUnit,
+        useMarkingCode: useMarkingCode,
+        positionTax: positionTax,
+    });
     if (data.payments.cash !== undefined) {
         payments.push({
             type: '0',
@@ -654,7 +671,7 @@ var legacyMapSell = function (data, options) {
         var amount = currency__default["default"](item.total).value;
         var infoDiscountAmount = currency__default["default"](itemDiscount).multiply(item.quantity).value;
         full_cost += amount;
-        return __assign({ type: 'position', name: item.name, price: price, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, measurementUnit: 'шт', tax: { type: 'none' } }, (item.description && useMarkingCode
+        return __assign({ type: 'position', name: item.name, price: price, quantity: item.quantity, amount: amount, infoDiscountAmount: infoDiscountAmount, measurementUnit: measurementUnit, tax: { type: positionTax } }, (item.description && useMarkingCode
             ? {
                 markingCode: getMarkingCode(item.description),
             }
@@ -666,13 +683,18 @@ var legacyMapSell = function (data, options) {
             type: 'position',
             name: 'Срочность',
             price: hurryAmmout,
-            measurementUnit: 'шт',
+            measurementUnit: measurementUnit,
             quantity: 1,
             amount: hurryAmmout,
             tax: { type: 'none' },
         });
     }
-    console.log({ items: items, payments: payments });
+    console.log('%c[ATOL]..........................legacyMapSell [items]', 'color:green');
+    for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
+        var item = items_1[_i];
+        console.log(item);
+    }
+    console.log({ payments: payments });
     return {
         items: items,
         payments: payments,
@@ -698,13 +720,42 @@ var validateData = function (schema, data) {
     }
 };
 var API = (function (session, options) {
-    var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000, useMarkingCode: true }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls, maxCodeLength = _a.maxCodeLength, useMarkingCode = _a.useMarkingCode;
-    console.log("%c[ATOL] @bedunkevich/atol version: ".concat(pkg.version), 'color:green', { session: session }, { baseUrl: baseUrl, maxCalls: maxCalls, delayBetweenCalls: delayBetweenCalls, maxCodeLength: maxCodeLength });
+    var _a = __assign({ baseUrl: 'http://127.0.0.1:16732', maxCalls: 7, delayBetweenCalls: 2000, useMarkingCode: true, measurementUnit: undefined }, options), baseUrl = _a.baseUrl, maxCalls = _a.maxCalls, delayBetweenCalls = _a.delayBetweenCalls, maxCodeLength = _a.maxCodeLength, useMarkingCode = _a.useMarkingCode, _optionUnit = _a.measurementUnit;
+    var operator = session.operator, taxationType = session.taxationType, meta = session.meta, _b = session.positionTax, positionTax = _b === void 0 ? 'none' : _b;
+    console.log("%c[ATOL] @bedunkevich/atol version: ".concat(pkg.version), 'color:green', { session: session }, {
+        baseUrl: baseUrl,
+        maxCalls: maxCalls,
+        delayBetweenCalls: delayBetweenCalls,
+        maxCodeLength: maxCodeLength,
+        operator: operator,
+        taxationType: taxationType,
+        meta: meta,
+        positionTax: positionTax,
+    });
+    var _c = meta || {}, username = _c.username, password = _c.password, json = _c.json;
+    var anyData = (function () {
+        try {
+            return json
+                ? JSON.parse(json)
+                : undefined;
+        }
+        catch (_a) {
+            return undefined;
+        }
+    })();
+    var measurementUnit = _optionUnit !== null && _optionUnit !== void 0 ? _optionUnit : anyData === null || anyData === void 0 ? void 0 : anyData.measurementUnit;
+    var headers = {
+        'Content-Type': 'application/json',
+    };
+    if (username && password) {
+        headers['Authorization'] = "Basic ".concat(window.btoa("".concat(username, ":").concat(password)));
+    }
+    console.log("%c[ATOL] @bedunkevich/atol version: ".concat(pkg.version), 'color:green', { measurementUnit: measurementUnit, headers: headers });
     var API = axios__default["default"].create({
         baseURL: baseUrl,
         timeout: 20000,
+        headers: headers,
     });
-    var operator = session.operator, taxationType = session.taxationType;
     validateData(SessionSchema, session);
     var post = function (uuid, request) {
         return API.post('/api/v2/requests', { uuid: uuid, request: request });
@@ -803,7 +854,7 @@ var API = (function (session, options) {
         if (type === void 0) { type = RequestTypes.sell; }
         var uuid = v1();
         validateData(SellSchema, data);
-        var task = __assign({ type: RequestTypes[type], taxationType: taxationType, operator: operator }, data);
+        var task = __assign({ type: RequestTypes[type], taxationType: taxationType, positionTax: positionTax, operator: operator }, data);
         console.log("%c[ATOL] [SELL] [".concat(type, "]"), 'color:green', task);
         return post(uuid, [task]);
     };
@@ -900,7 +951,12 @@ var API = (function (session, options) {
                         case 0:
                             console.log('%c[ATOL] [LEGACY]', 'color:green', data);
                             return [4 /*yield*/, executeTask(function () {
-                                    return sell(legacyMapSell(data, { useMarkingCode: useMarkingCode, maxCodeLength: maxCodeLength }));
+                                    return sell(legacyMapSell(data, {
+                                        useMarkingCode: useMarkingCode,
+                                        maxCodeLength: maxCodeLength,
+                                        measurementUnit: measurementUnit,
+                                        positionTax: positionTax,
+                                    }));
                                 }, cb)];
                         case 1:
                             _a.sent();
@@ -914,7 +970,12 @@ var API = (function (session, options) {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0: return [4 /*yield*/, executeTask(function () {
-                                return sell(legacyMapSell(data, { maxCodeLength: maxCodeLength, useMarkingCode: useMarkingCode }), RequestTypes.sellReturn);
+                                return sell(legacyMapSell(data, {
+                                    maxCodeLength: maxCodeLength,
+                                    useMarkingCode: useMarkingCode,
+                                    measurementUnit: measurementUnit,
+                                    positionTax: positionTax,
+                                }), RequestTypes.sellReturn);
                             }, cb)];
                         case 1:
                             _a.sent();

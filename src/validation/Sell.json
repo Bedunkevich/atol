@@ -120,7 +120,13 @@
         "vat18",
         "vat118",
         "vat20",
-        "vat120"
+        "vat120",
+        "vat5",
+        "vat105",
+        "vat7",
+        "vat107",
+        "vat22",
+        "vat122"
       ]
     },
     "MinimumArray<Payment>": {

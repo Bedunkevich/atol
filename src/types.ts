@@ -15,6 +15,7 @@ export type Options =
       delayBetweenCalls: number;
       maxCodeLength: number;
       useMarkingCode: boolean;
+      measurementUnit: string | number;
     }>
   | undefined;
 
@@ -71,9 +72,15 @@ export type TaskResultResponce = {
 
 export type Session = {
   taxationType: TaxationType;
+  positionTax: PositionTax;
   operator: {
     name: string;
     vatin?: string; // ИНН оператора
+  };
+  meta?: {
+    username?: string; // Имя пользователя в системе
+    password?: string; // Пароль пользователя в системе
+    json?: string; // Произвольная строка
   };
 };
 
@@ -85,7 +92,13 @@ export type PositionTax =
   | 'vat18' // НДС 18%
   | 'vat118' // НДС 18/118%
   | 'vat20' // НДС 20%
-  | 'vat120'; // НДС 20/120%
+  | 'vat120' // НДС 20/120%
+  | 'vat5' // НДС 5%
+  | 'vat105' // НДС 5/105%
+  | 'vat7' // НДС 7%
+  | 'vat107' // НДС 7/107%
+  | 'vat22' // НДС 22%
+  | 'vat122'; // НДС 22/122%
 
 export type Item = {
   type: 'position';
@@ -109,7 +122,7 @@ export type Item = {
   paymentObject?: 'commodity' | 'excise' | 'job' | 'service'; // По умолчанию: commodity
   department?: number; // Отдел / секция. По умолчанию: 1
   // Единицы измерения количества предмета расчета
-  measurementUnit?: string;
+  measurementUnit?: number | string;
   // • 0 - Применяется для предметов расчета, которые могут быть
   // реализованы поштучно или единицами
   // • 10 - Грамм

@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { type AxiosPromise } from 'axios';
 import pkg from '../package.json';
 import SessionSchema from './validation/Session.json';
 import SellSchema from './validation/Sell.json';
@@ -51,27 +51,69 @@ export default (session: Session, options: Options) => {
     delayBetweenCalls,
     maxCodeLength,
     useMarkingCode,
+    measurementUnit: _optionUnit,
   } = {
     baseUrl: 'http://127.0.0.1:16732',
     maxCalls: 7,
     delayBetweenCalls: 2000,
     useMarkingCode: true,
+    measurementUnit: undefined,
     ...options,
   };
+
+  const { operator, taxationType, meta, positionTax = 'none' } = session;
 
   console.log(
     `%c[ATOL] @bedunkevich/atol version: ${pkg.version}`,
     'color:green',
     { session },
-    { baseUrl, maxCalls, delayBetweenCalls, maxCodeLength },
+    {
+      baseUrl,
+      maxCalls,
+      delayBetweenCalls,
+      maxCodeLength,
+      operator,
+      taxationType,
+      meta,
+      positionTax,
+    },
+  );
+
+  const { username, password, json } = meta || {};
+
+  const anyData = (() => {
+    try {
+      return json
+        ? (JSON.parse(json) as Record<string, string | number>)
+        : undefined;
+    } catch {
+      return undefined;
+    }
+  })();
+
+  const measurementUnit = _optionUnit ?? anyData?.measurementUnit;
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (username && password) {
+    headers['Authorization'] = `Basic ${window.btoa(
+      `${username}:${password}`,
+    )}`;
+  }
+
+  console.log(
+    `%c[ATOL] @bedunkevich/atol version: ${pkg.version}`,
+    'color:green',
+    { measurementUnit, headers },
   );
 
   const API = axios.create({
     baseURL: baseUrl,
     timeout: 20000,
+    headers,
   });
-
-  const { operator, taxationType } = session;
 
   validateData(SessionSchema, session);
 
@@ -181,6 +223,7 @@ export default (session: Session, options: Options) => {
     const task = {
       type: RequestTypes[type],
       taxationType,
+      positionTax,
       operator,
       ...data,
     };
@@ -256,7 +299,14 @@ export default (session: Session, options: Options) => {
       console.log('%c[ATOL] [LEGACY]', 'color:green', data);
       await executeTask(
         () =>
-          sell(legacyMapSell(data, { useMarkingCode, maxCodeLength }) as any),
+          sell(
+            legacyMapSell(data, {
+              useMarkingCode,
+              maxCodeLength,
+              measurementUnit,
+              positionTax,
+            }) as any,
+          ),
         cb,
       );
     },
@@ -264,7 +314,12 @@ export default (session: Session, options: Options) => {
       await executeTask(
         () =>
           sell(
-            legacyMapSell(data, { maxCodeLength, useMarkingCode }) as any,
+            legacyMapSell(data, {
+              maxCodeLength,
+              useMarkingCode,
+              measurementUnit,
+              positionTax,
+            }) as any,
             RequestTypes.sellReturn,
           ),
         cb,

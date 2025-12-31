@@ -36,6 +36,7 @@ describe('ATOL LEGACY', () => {
             type: 'sell',
             taxationType: 'usnIncome',
             operator: { name: 'Иванов', vatin: '123654789507' },
+            positionTax: 'vat5',
             items: [
               {
                 type: 'position',
@@ -43,9 +44,9 @@ describe('ATOL LEGACY', () => {
                 price: 2.7,
                 quantity: 3,
                 amount: 8.1,
-                measurementUnit: 'шт',
+                measurementUnit: undefined,
                 infoDiscountAmount: 0.9,
-                tax: { type: 'none' },
+                tax: { type: 'vat5' },
               },
             ],
             payments: [{ type: '0', sum: 8.1 }],

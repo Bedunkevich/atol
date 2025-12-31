@@ -36,6 +36,7 @@ describe('ATOL LEGACY RETURN', () => {
             type: 'sellReturn',
             taxationType: 'usnIncome',
             operator: { name: 'Иванов', vatin: '123654789507' },
+            positionTax: 'vat5',
             items: [
               {
                 type: 'position',
@@ -44,8 +45,8 @@ describe('ATOL LEGACY RETURN', () => {
                 quantity: 3,
                 amount: 8.1,
                 infoDiscountAmount: 0.9,
-                measurementUnit: 'шт',
-                tax: { type: 'none' },
+                measurementUnit: undefined,
+                tax: { type: 'vat5' },
               },
             ],
             payments: [

@@ -1,10 +1,12 @@
 import currency from 'currency.js';
-import type { Item, Payment, LegacyObject } from './types';
+import type { Item, Payment, LegacyObject, PositionTax } from './types';
 import { getMarkingCode } from './helpers';
 
 type legacyMapSellOptions = {
   maxCodeLength?: number;
   useMarkingCode?: boolean;
+  measurementUnit?: number | string;
+  positionTax: PositionTax;
 };
 
 export const legacyMapSell = (
@@ -12,12 +14,20 @@ export const legacyMapSell = (
   options: legacyMapSellOptions = {
     maxCodeLength: undefined,
     useMarkingCode: true,
+    measurementUnit: undefined,
+    positionTax: 'none',
   },
 ): { items: Item[]; payments: Payment[] } => {
-  const { maxCodeLength, useMarkingCode } = options;
+  const { maxCodeLength, useMarkingCode, measurementUnit, positionTax } =
+    options;
   const payments: Payment[] = [];
 
-  console.log({ maxCodeLength });
+  console.log('%c[ATOL]..........................legacyMapSell', {
+    maxCodeLength,
+    measurementUnit,
+    useMarkingCode,
+    positionTax,
+  });
 
   if (data.payments.cash !== undefined) {
     payments.push({
@@ -70,8 +80,8 @@ export const legacyMapSell = (
       quantity: item.quantity,
       amount,
       infoDiscountAmount,
-      measurementUnit: 'шт',
-      tax: { type: 'none' },
+      measurementUnit,
+      tax: { type: positionTax },
       ...(item.description && useMarkingCode
         ? {
             markingCode: getMarkingCode(item.description),
@@ -89,14 +99,22 @@ export const legacyMapSell = (
       type: 'position',
       name: 'Срочность',
       price: hurryAmmout,
-      measurementUnit: 'шт',
+      measurementUnit,
       quantity: 1,
       amount: hurryAmmout,
       tax: { type: 'none' },
     });
   }
 
-  console.log({ items, payments });
+  console.log(
+    '%c[ATOL]..........................legacyMapSell [items]',
+    'color:green',
+  );
+  for (const item of items) {
+    console.log(item);
+  }
+
+  console.log({ payments });
 
   return {
     items,

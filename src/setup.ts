@@ -13,6 +13,7 @@ nock.disableNetConnect();
 const BASE_URL = 'http://127.0.0.1:16732';
 
 const SESSION: Session = {
+  positionTax: 'vat5',
   taxationType: 'usnIncome',
   operator: {
     name: 'Иванов',

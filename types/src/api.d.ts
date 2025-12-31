@@ -1,4 +1,4 @@
-import { AxiosPromise } from 'axios';
+import { type AxiosPromise } from 'axios';
 import { Session, Options, TaskResponce, TaskResultStatus, RequestTypes, Sell, LegacyCallback } from './types';
 declare const _default: (session: Session, options: Options) => {
     openShift: () => Promise<AxiosPromise<TaskResponce>>;

@@ -12,6 +12,7 @@ export type Options = Partial<{
     delayBetweenCalls: number;
     maxCodeLength: number;
     useMarkingCode: boolean;
+    measurementUnit: string | number;
 }> | undefined;
 export type TaskResponce = Partial<{
     uuid: string;
@@ -55,12 +56,18 @@ export type TaskResultResponce = {
 };
 export type Session = {
     taxationType: TaxationType;
+    positionTax: PositionTax;
     operator: {
         name: string;
         vatin?: string;
     };
+    meta?: {
+        username?: string;
+        password?: string;
+        json?: string;
+    };
 };
-export type PositionTax = 'none' | 'vat0' | 'vat10' | 'vat110' | 'vat18' | 'vat118' | 'vat20' | 'vat120';
+export type PositionTax = 'none' | 'vat0' | 'vat10' | 'vat110' | 'vat18' | 'vat118' | 'vat20' | 'vat120' | 'vat5' | 'vat105' | 'vat7' | 'vat107' | 'vat22' | 'vat122';
 export type Item = {
     type: 'position';
     name: string;
@@ -75,7 +82,7 @@ export type Item = {
     paymentMethod?: 'fullPrepayment' | 'prepayment' | 'advance' | 'fullPayment' | 'partialPayment' | 'credit' | 'creditPayment';
     paymentObject?: 'commodity' | 'excise' | 'job' | 'service';
     department?: number;
-    measurementUnit?: string;
+    measurementUnit?: number | string;
     markingCode?: {
         type?: 'other' | 'egais20' | 'egais30';
         mark: string;

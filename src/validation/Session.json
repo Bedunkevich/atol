@@ -8,6 +8,9 @@
         "taxationType": {
           "$ref": "#/definitions/TaxationType"
         },
+        "positionTax": {
+          "$ref": "#/definitions/PositionTax"
+        },
         "operator": {
           "type": "object",
           "properties": {
@@ -22,7 +25,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["taxationType", "operator"],
+      "required": ["taxationType", "operator", "positionTax"],
       "additionalProperties": false
     },
     "TaxationType": {
