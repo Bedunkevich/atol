@@ -102,7 +102,7 @@ export const legacyMapSell = (
       measurementUnit,
       quantity: 1,
       amount: hurryAmmout,
-      tax: { type: 'none' },
+      tax: { type: positionTax },
     });
   }
 
@@ -110,11 +110,8 @@ export const legacyMapSell = (
     '%c[ATOL]..........................legacyMapSell [items]',
     'color:green',
   );
-  for (const item of items) {
-    console.log(item);
-  }
 
-  console.log({ payments });
+  console.log(JSON.stringify({ items, payments }, null, 2));
 
   return {
     items,

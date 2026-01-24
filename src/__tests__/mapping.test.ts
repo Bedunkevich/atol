@@ -41,9 +41,11 @@ describe('LEGACY', () => {
           },
         ],
       },
-      undefined,
+      {
+        positionTax: 'vat105',
+      },
     );
-    console.log(responce);
+
     expect(responce).toMatchObject(
       expect.objectContaining({
         payments: [
@@ -63,6 +65,7 @@ describe('LEGACY', () => {
             price: 18,
             quantity: 1,
             amount: 18,
+            tax: { type: 'vat105' },
           }),
         ],
       }),
@@ -108,7 +111,7 @@ describe('LEGACY', () => {
       },
       undefined,
     );
-    console.log(responce);
+
     expect(responce).toMatchObject(
       expect.objectContaining({
         payments: [

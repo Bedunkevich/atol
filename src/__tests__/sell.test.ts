@@ -21,7 +21,7 @@ const items: MinimumArray<Item> = [
     quantity: 0.5,
     amount: 5.0,
     tax: {
-      type: 'none',
+      type: 'vat105',
     },
     markingCode: {
       type: 'other',
